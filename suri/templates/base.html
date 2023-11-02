@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-white">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Suricato</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link rel="icon" href="{{ url_for('static', filename='assets/favicon.png') }}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer type="module" src="https://pyscript.net/snapshots/2023.09.1.RC2/core.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    // mudo o font-medium o font-size
+                    fontSize: {
+                        "2xs": ".65rem",
+                    },
+                    colors: {
+                        clifford: "#da373d",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        html {
+            font-size: 15px; /* 1rem agora será igual a 20px */
+        }
+    </style>
+</head>
+
+<body style="width: 100%; height: calc(100vh - 50px);">
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>
