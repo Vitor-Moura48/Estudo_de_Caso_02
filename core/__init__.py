@@ -6,6 +6,8 @@ from PyQt6.QtWebEngineCore import *
 from PyQt6.QtCore import QUrl
 import socket
 
+from core.util import resource_path
+
 DEBUG_PORT = '5588'
 DEBUG_URL = f'http://127.0.0.1:{DEBUG_PORT}'
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = DEBUG_PORT
@@ -39,9 +41,37 @@ class WebPage(QWebEnginePage):
             return False
         return super(WebPage, self).acceptNavigationRequest(url, kind, is_main_frame)
 
+    def javaScriptAlert(self, securityOrigin, msg):
+
+        icon = QtWidgets.QMessageBox.Icon.Warning
+        title = "Aviso"
+
+        # Verifica se a mensagem é um aviso, erro ou sucesso
+        if msg.__contains__("Aviso:"):
+            icon = QtWidgets.QMessageBox.Icon.Warning
+            msg = msg.replace("Aviso:", "")
+            title = "Aviso"
+        if msg.__contains__("Erro:"):
+            icon = QtWidgets.QMessageBox.Icon.Critical
+            msg = msg.replace("Erro:", "")
+            title = "Erro"
+        elif msg.__contains__("Sucesso:"):
+            icon = QtWidgets.QMessageBox.Icon.Information
+            msg = msg.replace("Sucesso:", "")
+            title = "Sucesso"
+
+        msg_box = QtWidgets.QMessageBox()
+        msg_box.setParent(self.parent())
+        msg_box.setIcon(icon)
+        msg_box.setWindowIcon(QtGui.QIcon(resource_path("appicon.png")))
+        msg_box.setText(msg)
+        msg_box.setWindowTitle(title)
+        msg_box.exec()
+
+
 
 def init_gui(application, port=0, width=800, height=600,
-             window_title="Suricato", icon=os.path.abspath("suri/appicon.png"), router='splash', argv=None, inspector_mode=False):
+             window_title="Suricato", icon=resource_path("appicon.png"), router='splash', argv=None, inspector_mode=False):
     
     if argv is None:
         argv = sys.argv
@@ -77,7 +107,7 @@ def init_gui(application, port=0, width=800, height=600,
     window.setCentralWidget(webView)
 
     # WebPage Level
-    page = WebPage(f'http://localhost:{port}{'/' + router}')
+    page = WebPage(f"http://localhost:{port}/{router}")
     page.home()
     webView.setPage(page)
 
@@ -88,7 +118,7 @@ def init_gui(application, port=0, width=800, height=600,
         inspector.settings().setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
         inspector.load(QtCore.QUrl("http://localhost:{}".format(DEBUG_PORT)))
         inspector.page().profile().setHttpUserAgent("Chrome/88.0.4324.182")
-        inspector.setWindowIcon(QtGui.QIcon(os.path.abspath('suri/webinspectoricon.png')))
+        inspector.setWindowIcon(QtGui.QIcon(resource_path("static/assets/webinspectoricon.png")))
         page.setDevToolsPage(inspector.page())
         inspector.show()
 

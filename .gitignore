@@ -90,6 +90,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+node_modules/
+package-lock.json
 
 # Spyder project settings
 .spyderproject
