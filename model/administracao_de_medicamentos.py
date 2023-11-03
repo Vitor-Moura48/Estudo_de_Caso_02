@@ -4,6 +4,8 @@ import json
 
 class AdmMedicamentos:
     def __init__(self):
+
+        # inicializando os arquivos, caso não tenham sido
         self.caminho_arquivo_medicamentos = "database/medicamentos.csv"
         self.caminho_arquivo_estoque = "database/registro_de_lote_medicamentos.csv"
 
@@ -20,8 +22,10 @@ class AdmMedicamentos:
         except:
             arquivo = pandas.DataFrame()
        
+        # se o arquivo não estiver vazio e o nome não estiver ne lista já registrada
         if not arquivo.empty and nome in arquivo['nome'].values:    
             print("Medicamento já cadastrado!!")
+        # adiciona o nome junto com os dados
         else:
             novo_medicamento = {'nome': [nome],
                                 "principio_ativo": [principio_ativo], 
@@ -29,6 +33,8 @@ class AdmMedicamentos:
                                 "forma_adiministracao": [forma_adiministracao],
                                 }  
             novo_medicamento = pandas.DataFrame(novo_medicamento)
+
+            # se estiver vazio, mantem o cabeçalho, se não, ignora
             if arquivo.empty:
                 novo_medicamento.to_csv(self.caminho_arquivo_medicamentos, index=False, mode="a")
             else:
@@ -45,7 +51,7 @@ class AdmMedicamentos:
         except:
             arquivo_estoque = pandas.DataFrame()
 
-
+        # se houver algum medicamento cadastrado
         if not arquivo.empty:
 
             print("Selecione o medicamento: ")
@@ -53,13 +59,12 @@ class AdmMedicamentos:
                 print(medicamentos)
 
             selecionado = input("medicamento: ")
-            if not arquivo_estoque.empty:
-                print(arquivo_estoque['lote'].values)
-            if not arquivo_estoque.empty and lote in arquivo_estoque['lote'].values:    
+            # se o registro não estiver vazio e o lote já foi ragistrado
+            if not arquivo_estoque.empty and lote in arquivo_estoque['lote'].astype(str).to_list():    
                 print("Lote já existe!")
 
-            else:
-                
+            # adiciona o lote no arquivo de registro
+            else: 
                 novo_lote = {'nome': [selecionado],
                              "lote": [lote], 
                              "quantidade": [quantidade],
@@ -68,6 +73,7 @@ class AdmMedicamentos:
                                 }
                 novo_lote = pandas.DataFrame(novo_lote)
 
+                # mantem o cabeçalho caso seja o primeiro
                 if arquivo_estoque.empty:
                     novo_lote.to_csv(self.caminho_arquivo_estoque, index=False, mode="a")
                 else:
@@ -77,7 +83,7 @@ class AdmMedicamentos:
             print("Sem medicamentos registrados!")
        
     
-
+# testando as funções
 adiministrar_medicamento = AdmMedicamentos()
 adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
 adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
