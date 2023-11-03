@@ -118,7 +118,7 @@ def init_gui(application, port=0, width=800, height=600,
         inspector.settings().setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
         inspector.load(QtCore.QUrl("http://localhost:{}".format(DEBUG_PORT)))
         inspector.page().profile().setHttpUserAgent("Chrome/88.0.4324.182")
-        inspector.setWindowIcon(QtGui.QIcon(os.path.abspath('static/assets/webinspectoricon.png')))
+        inspector.setWindowIcon(QtGui.QIcon(resource_path("static/assets/webinspectoricon.png")))
         page.setDevToolsPage(inspector.page())
         inspector.show()
 
