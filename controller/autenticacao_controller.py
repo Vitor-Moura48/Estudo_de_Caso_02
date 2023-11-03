@@ -13,7 +13,7 @@ class AutenticacaoController:
 
         message, status = autenticacao.autenticar(username, password)
 
-        response = make_response(jsonify({"message": message}), status)
+        response = make_response(jsonify({"message": message, "status": status}), status)
         response.headers['Content-Type'] = 'application/json; charset=utf-8'
         return response
     
@@ -31,6 +31,6 @@ class AutenticacaoController:
 
         message, status = autenticacao.cadastrar(nome_completo, username, password)
 
-        response = make_response(jsonify({"message": message}), status)
+        response = make_response(jsonify({"message": message, "status": status}), status)
         response.headers['Content-Type'] = 'application/json; charset=utf-8'
         return response

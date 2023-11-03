@@ -104,7 +104,7 @@
             <p class="text-sm">Módulo de relátorios e análises</p>
           </div>
         </div>
-        <div class="bg-gray-100 p-4 rounded-lg flex flex-row justify-start items-center border border-gray-300 hover:border-red-500 cursor-pointer transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
+        <div id="logout" class="bg-gray-100 p-4 rounded-lg flex flex-row justify-start items-center border border-gray-300 hover:border-red-500 cursor-pointer transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
           <div class="mr-4">
             <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17 9H7.5M15 12L18 9L15 6M10 4V3C10 2.46957 9.78929 1.96086 9.41421 1.58579C9.03914 1.21071 8.53043 1 8 1H3C2.46957 1 1.96086 1.21071 1.58579 1.58579C1.21071 1.96086 1 2.46957 1 3V15C1 15.5304 1.21071 16.0391 1.58579 16.4142C1.96086 16.7893 2.46957 17 3 17H8C8.53043 17 9.03914 16.7893 9.41421 16.4142C9.78929 16.0391 10 15.5304 10 15V14" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -118,4 +118,10 @@
       </div>
     </div>
   </div>
+  <script>
+    const logout = document.getElementById('logout');
+    logout.addEventListener('click', () => {
+      window.location.replace("{{ url_for('login') }}");
+    });
+  </script>
 {% endblock %}
