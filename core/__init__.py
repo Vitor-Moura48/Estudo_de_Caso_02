@@ -107,7 +107,7 @@ def init_gui(application, port=0, width=800, height=600,
     window.setCentralWidget(webView)
 
     # WebPage Level
-    page = WebPage(f'http://localhost:{port}{'/' + router}')
+    page = WebPage(f"http://localhost:{port}/{router}")
     page.home()
     webView.setPage(page)
 
