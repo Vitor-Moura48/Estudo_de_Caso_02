@@ -5,6 +5,8 @@ class AgendamentoControleVisitas:
     def __init__(self):
         self.caminho_arquivo_restricoes = "database/restricoes_de_visitas.csv"
         self.caminho_arquivo_visitantes = "database/registo_de_visitantes.csv"
+        self.caminho_arquivo_acesso = "database/controle_de_acesso_de_visitantes.csv"
+
 
         if not os.path.exists(self.caminho_arquivo_restricoes):
             estrutura = {
@@ -16,6 +18,9 @@ class AgendamentoControleVisitas:
         if not os.path.exists(self.caminho_arquivo_visitantes):
             arquivo = pandas.DataFrame()
             arquivo.to_csv(self.caminho_arquivo_visitantes, index=False)
+        if not os.path.exists(self.caminho_arquivo_acesso):
+            arquivo = pandas.DataFrame()
+            arquivo.to_csv(self.caminho_arquivo_acesso, index=False)
     
     def agendar_visita(self, nome_paciente, data, horario):
         caminho_arquivo_agenda = f"database/agenda_de_visitas_{nome_paciente}.csv"
@@ -58,13 +63,38 @@ class AgendamentoControleVisitas:
             arquivo_visitantes = pandas.read_csv(self.caminho_arquivo_visitantes)
         except:
             arquivo_visitantes = pandas.DataFrame()
-        
-        novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
 
-        if arquivo_visitantes.empty:
-            novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a")
+        try:
+            arquivo_acesso = pandas.read_csv(self.caminho_arquivo_acesso)
+        except:
+            arquivo_acesso = pandas.DataFrame()
+
+        if not arquivo_acesso.empty and  identificacao in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
+            print("\nVisitante com restrição!")
         else:
-            novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a", header=False)
+            novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
+
+            if arquivo_visitantes.empty:
+                novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a")
+            else:
+                novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a", header=False)
+    
+    def controlar_acesso(self, identificacao_visitante, nome_paciente):
+        try:
+            arquivo_acesso = pandas.read_csv(self.caminho_arquivo_acesso)
+        except:
+            arquivo_acesso = pandas.DataFrame()
+    
+        if not arquivo_acesso.empty and identificacao_visitante in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
+            print("\nVisitante já cadastrado!")
+        else:
+            novo_controle = pandas.DataFrame({'identificacao_visitante': [identificacao_visitante], 'nome_paciente': [nome_paciente]})
+
+            if arquivo_acesso.empty:
+                novo_controle.to_csv(self.caminho_arquivo_acesso, index=False, mode="a")
+            else:
+                novo_controle.to_csv(self.caminho_arquivo_acesso, index=False, mode="a", header=False)
+
 
 agenda = AgendamentoControleVisitas()
 
@@ -80,3 +110,6 @@ agenda.restringir_visitas('2', '25', '14')
 
 agenda.registrar_visitante('carlos', '54342632', 'amigo', 'jose')
 agenda.registrar_visitante('isadora', '92658651', 'amiga', 'joao')
+
+agenda.controlar_acesso('54342632', 'jose')
+agenda.controlar_acesso('92658651', 'ana')
