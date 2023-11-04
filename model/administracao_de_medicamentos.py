@@ -76,14 +76,14 @@ class AdmMedicamentos:
         # se houver algum medicamento cadastrado
         if not arquivo.empty:
 
-            print("Selecione o medicamento: ")
-            for medicamentos in arquivo['nome'].values:
-                print(medicamentos)
+            print("\nSelecione o medicamento: ")
+            for medicamento in arquivo['nome'].values:
+                print(medicamento)
 
             selecionado = input("medicamento: ")
             # se o registro não estiver vazio e o lote já foi ragistrado
             if not arquivo_registro.empty and lote in arquivo_registro['lote'].astype(str).to_list():    
-                print("Lote já existe!")
+                print("\nLote já existe!")
 
             # adiciona o lote no arquivo de registro
             else: 
@@ -106,11 +106,27 @@ class AdmMedicamentos:
                 arquivo_estoque.to_csv(self.caminho_arquivo_estoque, index=False)
 
         else:
-            print("Sem medicamentos registrados!")
+            print("\nSem medicamentos registrados!")
     
     def alerta(self, nome, quantidade):
-        print(f"{nome}: Estoque baixo, {quantidade}!")
-       
+        print(f"\n{nome}: Estoque baixo, {quantidade}!")
+    
+    def rastrear_lotes(self, lote):
+        try:
+            arquivo_registro = pandas.read_csv(self.caminho_arquivo_registro)
+        except:
+            arquivo_registro = pandas.DataFrame()
+        
+        if not arquivo_registro.empty:
+            if lote in arquivo_registro['lote'].astype(str).to_list():
+                print('\nencontrado:')
+                print(arquivo_registro.loc[arquivo_registro['lote'].astype(str) == lote].to_csv(index=False))
+            else:
+                print("\nLote não encontrado, registro de todos os lotes:")
+                print(arquivo_registro.to_csv(index=False))
+        else:
+            print("\nRegistro de lotes vazio!")
+            
     
 # testando as funções
 adiministrar_medicamento = AdmMedicamentos()
@@ -123,3 +139,6 @@ adiministrar_medicamento.registrar_lote('253255', 4365, '14/03/2024', 'NEUXFJ')
 adiministrar_medicamento.registrar_lote('253255', 4365, '14/03/2024', 'NEUXFJ')
 adiministrar_medicamento.registrar_lote('435636', 65, '14/07/2025', 'FEWFJ')
 adiministrar_medicamento.registrar_lote('789655', 465, '24/03/2024', 'REWBS')
+
+adiministrar_medicamento.rastrear_lotes('253255')
+adiministrar_medicamento.rastrear_lotes('963635')
