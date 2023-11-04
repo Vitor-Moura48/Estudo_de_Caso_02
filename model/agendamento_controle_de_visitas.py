@@ -4,6 +4,7 @@ import pandas
 class AgendamentoControleVisitas:
     def __init__(self):
         self.caminho_arquivo_restricoes = "database/restricoes_de_visitas.csv"
+        self.caminho_arquivo_visitantes = "database/registo_de_visitantes.csv"
 
         if not os.path.exists(self.caminho_arquivo_restricoes):
             estrutura = {
@@ -12,6 +13,9 @@ class AgendamentoControleVisitas:
             }
             arquivo = pandas.DataFrame(estrutura)
             arquivo.to_csv(self.caminho_arquivo_restricoes, index=False)
+        if not os.path.exists(self.caminho_arquivo_visitantes):
+            arquivo = pandas.DataFrame()
+            arquivo.to_csv(self.caminho_arquivo_visitantes, index=False)
     
     def agendar_visita(self, nome_paciente, data, horario):
         caminho_arquivo_agenda = f"database/agenda_de_visitas_{nome_paciente}.csv"
@@ -48,7 +52,19 @@ class AgendamentoControleVisitas:
             print('\nEste horário já está restrito')
 
         restricoes.to_csv(self.caminho_arquivo_restricoes, index=False)
+    
+    def registrar_visitante(self, nome_visitante, identificacao, relacao_com_paciente, nome_paciente):
+        try:
+            arquivo_visitantes = pandas.read_csv(self.caminho_arquivo_visitantes)
+        except:
+            arquivo_visitantes = pandas.DataFrame()
         
+        novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
+
+        if arquivo_visitantes.empty:
+            novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a")
+        else:
+            novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a", header=False)
 
 agenda = AgendamentoControleVisitas()
 
@@ -61,3 +77,6 @@ agenda.agendar_visita('jamile', '1', '3')
 agenda.restringir_visitas('2', '15', '13')
 agenda.restringir_visitas('3', '20', '14')
 agenda.restringir_visitas('2', '25', '14')
+
+agenda.registrar_visitante('carlos', '54342632', 'amigo', 'jose')
+agenda.registrar_visitante('isadora', '92658651', 'amiga', 'joao')
