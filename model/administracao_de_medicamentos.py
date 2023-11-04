@@ -7,20 +7,32 @@ class AdmMedicamentos:
 
         # inicializando os arquivos, caso não tenham sido
         self.caminho_arquivo_medicamentos = "database/medicamentos.csv"
-        self.caminho_arquivo_estoque = "database/registro_de_lote_medicamentos.csv"
+        self.caminho_arquivo_registro = "database/registro_de_lote_medicamentos.csv"
+        self.caminho_arquivo_estoque = "database/estoque_de_medicamentos.csv"
 
         if not os.path.exists(self.caminho_arquivo_medicamentos):
             arquivo = pandas.DataFrame()
             arquivo.to_csv(self.caminho_arquivo_medicamentos, index=False)
-        if not os.path.exists(self.caminho_arquivo_estoque):
+        if not os.path.exists(self.caminho_arquivo_registro):
             arquivo = pandas.DataFrame()
-            arquivo.to_csv(self.caminho_arquivo_estoque, index=False) 
+            arquivo.to_csv(self.caminho_arquivo_registro, index=False) 
+        if not os.path.exists(self.caminho_arquivo_estoque):
+            estrutura = {
+                'inicialização':0
+            }
+            arquivo = pandas.DataFrame(estrutura, index=[0])
+            arquivo.to_csv(self.caminho_arquivo_estoque, index=False, index_label=None) 
           
     def cadastrar_medicamento(self, nome, principio_ativo, dosagem, forma_adiministracao):
         try:
             arquivo = pandas.read_csv(self.caminho_arquivo_medicamentos)
         except:
             arquivo = pandas.DataFrame()
+        
+        try:
+            arquivo_estoque = pandas.read_csv(self.caminho_arquivo_estoque)
+        except:
+            arquivo_estoque = pandas.DataFrame({})
        
         # se o arquivo não estiver vazio e o nome não estiver ne lista já registrada
         if not arquivo.empty and nome in arquivo['nome'].values:    
@@ -37,8 +49,13 @@ class AdmMedicamentos:
             # se estiver vazio, mantem o cabeçalho, se não, ignora
             if arquivo.empty:
                 novo_medicamento.to_csv(self.caminho_arquivo_medicamentos, index=False, mode="a")
+                arquivo_estoque.pop('inicialização')
             else:
                 novo_medicamento.to_csv(self.caminho_arquivo_medicamentos, index=False, mode="a", header=False)
+            
+            # adiciona o medicamento no arquivo de estoque
+            arquivo_estoque[nome] = 0
+            arquivo_estoque.to_csv(self.caminho_arquivo_estoque, index=False)
 
     def registrar_lote(self, lote, quantidade, validade, fornecedor):
         try:
@@ -46,6 +63,11 @@ class AdmMedicamentos:
         except:
             arquivo = pandas.DataFrame()
 
+        try:
+            arquivo_registro = pandas.read_csv(self.caminho_arquivo_registro)
+        except:
+            arquivo_registro = pandas.DataFrame()
+        
         try:
             arquivo_estoque = pandas.read_csv(self.caminho_arquivo_estoque)
         except:
@@ -60,7 +82,7 @@ class AdmMedicamentos:
 
             selecionado = input("medicamento: ")
             # se o registro não estiver vazio e o lote já foi ragistrado
-            if not arquivo_estoque.empty and lote in arquivo_estoque['lote'].astype(str).to_list():    
+            if not arquivo_registro.empty and lote in arquivo_registro['lote'].astype(str).to_list():    
                 print("Lote já existe!")
 
             # adiciona o lote no arquivo de registro
@@ -74,13 +96,20 @@ class AdmMedicamentos:
                 novo_lote = pandas.DataFrame(novo_lote)
 
                 # mantem o cabeçalho caso seja o primeiro
-                if arquivo_estoque.empty:
-                    novo_lote.to_csv(self.caminho_arquivo_estoque, index=False, mode="a")
+                if arquivo_registro.empty:
+                    novo_lote.to_csv(self.caminho_arquivo_registro, index=False, mode="a")
                 else:
-                    novo_lote.to_csv(self.caminho_arquivo_estoque, index=False, mode="a", header=False)
+                    novo_lote.to_csv(self.caminho_arquivo_registro, index=False, mode="a", header=False)
+                
+                # adiciona a quantidade no arquivo de estoque
+                arquivo_estoque[selecionado] += quantidade
+                arquivo_estoque.to_csv(self.caminho_arquivo_estoque, index=False)
 
         else:
             print("Sem medicamentos registrados!")
+    
+    def alerta(self, nome, quantidade):
+        print(f"{nome}: Estoque baixo, {quantidade}!")
        
     
 # testando as funções
