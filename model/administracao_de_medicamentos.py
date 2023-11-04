@@ -159,6 +159,21 @@ class AdmMedicamentos:
         else:
             print("Medicamento indisponível! Fora de estoque!")
     
+    def informacoes_de_medicacao(self, nome):
+        try:
+            arquivo = pandas.read_csv(self.caminho_arquivo_medicamentos)
+        except:
+            arquivo = pandas.DataFrame()
+       
+        # se o arquivo não estiver vazio e o nome não estiver na lista já registrada
+        if not arquivo.empty:    
+            if nome in arquivo['nome'].astype(str).to_csv():
+               print(f"\n{arquivo.loc[arquivo['nome'].astype(str) == nome].to_csv(index=False)}")
+            else:
+               print("\nMedicamento não encontrado!")
+        else:
+            print("\nNão há medicamentos para serem consultados")
+    
             
     
 # testando as funções
@@ -178,3 +193,6 @@ adiministrar_medicamento.rastrear_lotes('963635')
 
 adiministrar_medicamento.registrar_administracao('remedio', '04/11/2023', '12:00', 'rafael', '500ml', 'otton')
 adiministrar_medicamento.registrar_administracao('remedio 2', '04/11/2023', '15:00', 'otton', '350ml', 'rafael')
+
+adiministrar_medicamento.informacoes_de_medicacao('remedio')
+adiministrar_medicamento.informacoes_de_medicacao('ergvefdg')
