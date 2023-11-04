@@ -7,21 +7,25 @@ class AdmMedicamentos:
 
         # inicializando os arquivos, caso não tenham sido
         self.caminho_arquivo_medicamentos = "database/medicamentos.csv"
-        self.caminho_arquivo_registro = "database/registro_de_lote_medicamentos.csv"
+        self.caminho_arquivo_registro_lotes = "database/registro_de_lote_medicamentos.csv"
         self.caminho_arquivo_estoque = "database/estoque_de_medicamentos.csv"
+        self.caminho_arquivo_registro_administracao = "database/registro_de_administracao.csv"
 
         if not os.path.exists(self.caminho_arquivo_medicamentos):
             arquivo = pandas.DataFrame()
             arquivo.to_csv(self.caminho_arquivo_medicamentos, index=False)
-        if not os.path.exists(self.caminho_arquivo_registro):
+        if not os.path.exists(self.caminho_arquivo_registro_lotes):
             arquivo = pandas.DataFrame()
-            arquivo.to_csv(self.caminho_arquivo_registro, index=False) 
+            arquivo.to_csv(self.caminho_arquivo_registro_lotes, index=False) 
         if not os.path.exists(self.caminho_arquivo_estoque):
             estrutura = {
                 'inicialização':0
             }
             arquivo = pandas.DataFrame(estrutura, index=[0])
             arquivo.to_csv(self.caminho_arquivo_estoque, index=False, index_label=None) 
+        if not os.path.exists(self.caminho_arquivo_registro_administracao):
+            arquivo = pandas.DataFrame()
+            arquivo.to_csv(self.caminho_arquivo_registro_administracao, index=False) 
           
     def cadastrar_medicamento(self, nome, principio_ativo, dosagem, forma_adiministracao):
         try:
@@ -64,7 +68,7 @@ class AdmMedicamentos:
             arquivo = pandas.DataFrame()
 
         try:
-            arquivo_registro = pandas.read_csv(self.caminho_arquivo_registro)
+            arquivo_registro = pandas.read_csv(self.caminho_arquivo_registro_lotes)
         except:
             arquivo_registro = pandas.DataFrame()
         
@@ -97,9 +101,9 @@ class AdmMedicamentos:
 
                 # mantem o cabeçalho caso seja o primeiro
                 if arquivo_registro.empty:
-                    novo_lote.to_csv(self.caminho_arquivo_registro, index=False, mode="a")
+                    novo_lote.to_csv(self.caminho_arquivo_registro_lotes, index=False, mode="a")
                 else:
-                    novo_lote.to_csv(self.caminho_arquivo_registro, index=False, mode="a", header=False)
+                    novo_lote.to_csv(self.caminho_arquivo_registro_lotes, index=False, mode="a", header=False)
                 
                 # adiciona a quantidade no arquivo de estoque
                 arquivo_estoque[selecionado] += quantidade
@@ -109,11 +113,11 @@ class AdmMedicamentos:
             print("\nSem medicamentos registrados!")
     
     def alerta(self, nome, quantidade):
-        print(f"\n{nome}: Estoque baixo, {quantidade}!")
+        print(f"\n{nome} -- Estoque baixo: {quantidade}!")
     
     def rastrear_lotes(self, lote):
         try:
-            arquivo_registro = pandas.read_csv(self.caminho_arquivo_registro)
+            arquivo_registro = pandas.read_csv(self.caminho_arquivo_registro_lotes)
         except:
             arquivo_registro = pandas.DataFrame()
         
@@ -126,6 +130,35 @@ class AdmMedicamentos:
                 print(arquivo_registro.to_csv(index=False))
         else:
             print("\nRegistro de lotes vazio!")
+    
+    def registrar_administracao(self, nome, data, horario, paciente, dosagem, responsavel):
+        try:
+            arquivo_estoque = pandas.read_csv(self.caminho_arquivo_estoque)
+        except:
+            arquivo_estoque = pandas.DataFrame({})
+
+        try:
+            arquivo_registro_adiministracao = pandas.read_csv(self.caminho_arquivo_registro_administracao)
+        except:
+            arquivo_registro_adiministracao = pandas.DataFrame({})
+
+        # subtrai o medicamento no arquivo de estoque
+        if arquivo_estoque[nome][0] > 0:
+            arquivo_estoque[nome] -= 1
+            arquivo_estoque.to_csv(self.caminho_arquivo_estoque, index=False)
+
+            novo_registro = pandas.DataFrame({'nome': [nome], 'data': [data], 'horario': [horario], 'paciente': [paciente], 'dosagem': [dosagem], 'responsavel': [responsavel]})
+
+            if arquivo_registro_adiministracao.empty:
+                novo_registro.to_csv(self.caminho_arquivo_registro_administracao, index=False, mode="a")
+            else:
+                novo_registro.to_csv(self.caminho_arquivo_registro_administracao, index=False, mode="a", header=False)
+
+            if arquivo_estoque[nome][0] < 10:
+                self.alerta(nome, arquivo_estoque[nome][0])
+        else:
+            print("Medicamento indisponível! Fora de estoque!")
+    
             
     
 # testando as funções
@@ -135,10 +168,13 @@ adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "t
 adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
 adiministrar_medicamento.cadastrar_medicamento("remedio 2", "ingerir 2", "200ml 2", "tomar 2")
 
-adiministrar_medicamento.registrar_lote('253255', 4365, '14/03/2024', 'NEUXFJ')
-adiministrar_medicamento.registrar_lote('253255', 4365, '14/03/2024', 'NEUXFJ')
+adiministrar_medicamento.registrar_lote('253255', 46, '14/03/2024', 'NEUXFJ')
+adiministrar_medicamento.registrar_lote('253255', 35, '14/03/2024', 'NEUXFJ')
 adiministrar_medicamento.registrar_lote('435636', 65, '14/07/2025', 'FEWFJ')
 adiministrar_medicamento.registrar_lote('789655', 465, '24/03/2024', 'REWBS')
 
 adiministrar_medicamento.rastrear_lotes('253255')
 adiministrar_medicamento.rastrear_lotes('963635')
+
+adiministrar_medicamento.registrar_administracao('remedio', '04/11/2023', '12:00', 'rafael', '500ml', 'otton')
+adiministrar_medicamento.registrar_administracao('remedio 2', '04/11/2023', '15:00', 'otton', '350ml', 'rafael')
