@@ -175,25 +175,31 @@ class AgendamentoControleVisitas:
 # testando as funções
 agenda = AgendamentoControleVisitas()
 
+# argumentos: nome do paciente, data, hora
 agenda.agendar_visita('joao', '4', '15')
 agenda.agendar_visita('julia', '16', '5')
 agenda.agendar_visita('jose', '4', '19')
 agenda.agendar_visita('jonas', '28', '22')
 agenda.agendar_visita('jamile', '1', '3')
 
+# argumentos máximo de visitantes por vez, tempo máximo de visita, horário para restringir
 agenda.restringir_visitas('2', '15', '13')
 agenda.restringir_visitas('3', '20', '14')
 agenda.restringir_visitas('2', '25', '14')
 
+# argumentos: nome do visitante, identificação do visitante, relação com paciente, nome do paciente
 agenda.registrar_visitante('carlos', '54342632', 'amigo', 'jose')
 agenda.registrar_visitante('isadora', '92658651', 'amiga', 'joao')
 
+# argumentos: identificação do visitante, nome do paciente
 agenda.controlar_acesso('54342632', 'jose')
 agenda.controlar_acesso('92658651', 'ana')
 
 agenda.notificar_visita()
 
+# argumentos: nome do paciente, data, hora
 agenda.cancelar_visita('julia', '16', '5')
 agenda.cancelar_visita('julia', '6', '11')
 
+# argumentos: nome do paciente, data, hora, nova data, nova hora
 agenda.reagendar_visita('jonas', '28', '22', '14', '7')
