@@ -39,6 +39,10 @@ def register():
 def home():
     return render_template('home.html')
 
+@app.route('/gestao_leitos')
+def gestao_leitos():
+    return render_template('modulo1/index.html')
+
 @app.route('/page2')
 def page2():
     return render_template('page2.html')
