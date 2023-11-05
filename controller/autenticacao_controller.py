@@ -1,5 +1,7 @@
 from model.autenticacao import Autenticacao
 from flask import jsonify, make_response
+from model.administracao_de_medicamentos import AdmMedicamentos
+from model.agendamento_controle_de_visitas import AgendamentoControleVisitas
 
 class AutenticacaoController:
 
