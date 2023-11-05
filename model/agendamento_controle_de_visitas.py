@@ -85,14 +85,21 @@ class AgendamentoControleVisitas:
         # confere se aquele visitante está com acesso restrito ao paciente
         if not arquivo_acesso.empty and  identificacao in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
             print("\nVisitante com restrição!")
+
         # se não estiver, cria um registro do visitante
         else:
-            novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
+            # verifica se já existe um registro igual, se não houver, cria o registro
+            if arquivo_visitantes.empty or arquivo_visitantes[(arquivo_visitantes['identificacao'] == int(identificacao)) & (arquivo_visitantes['nome_paciente'] == nome_paciente)].empty:
 
-            if arquivo_visitantes.empty:
-                novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a")
+                print('\nregistrndo visitante')
+                novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
+                if arquivo_visitantes.empty:
+                    novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a")
+                else:
+                    novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a", header=False)
+            # se já houver, não cria outro
             else:
-                novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a", header=False)
+                print("Visitante já registrado com esse paciente")
     
     def controlar_acesso(self, identificacao_visitante, nome_paciente):
         try:
@@ -135,7 +142,8 @@ class AgendamentoControleVisitas:
             if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
 
                 print("\nRemovendo")
-                agenda.drop(agenda[agenda["nome"] == nome_paciente]['data'].index[0], inplace=True) # faltam mais verificações
+                indice = agenda[(agenda["nome"] == nome_paciente) & (agenda["data"] == int(data)) & (agenda['horario'] == int(horario))].index[0]
+                agenda.drop(indice, inplace=True)
                 agenda.to_csv(self.caminho_arquivo_agenda, index=False)
             
             # se a visita não estiver, printa a informação
@@ -159,7 +167,7 @@ class AgendamentoControleVisitas:
             if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
 
                 print("\nAlterando")
-                indice = agenda[agenda["nome"] == nome_paciente]['data'].index[0]  # faltam verificações
+                indice = agenda[(agenda["nome"] == nome_paciente) & (agenda["data"] == int(data)) & (agenda['horario'] == int(horario))].index[0]
                 agenda.loc[indice, ['data']] = [int(nova_data)]
                 agenda.loc[indice, ['horario']] = [int(novo_horario)]
                 agenda.to_csv(self.caminho_arquivo_agenda, index=False)
