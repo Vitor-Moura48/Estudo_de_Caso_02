@@ -39,7 +39,7 @@ class AgendamentoControleVisitas:
 
         else:
             if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
-                if agenda[agenda["nome"] == nome_paciente]['data'].values[0] and agenda[agenda["nome"] == nome_paciente]['horario'].values[0]:
+                if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
                     print("Horário indisponível")
                 
             else:
@@ -110,11 +110,47 @@ class AgendamentoControleVisitas:
 
         print(f"\nVisita Marcada para amanhã: {ano}-{mes}-{dia}")
     
-    def cancelar_visita(self):
-        pass
-    
-    def reagendar_visita(self):
-        pass
+    def cancelar_visita(self, nome_paciente, data, horario):
+        try:
+            agenda = pandas.read_csv(self.caminho_arquivo_agenda)
+        except:
+            agenda = pandas.DataFrame()
+
+        if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
+
+            if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
+
+                print("\nRemovendo")
+                agenda.drop(agenda[agenda["nome"] == nome_paciente]['data'].index[0], inplace=True)
+                agenda.to_csv(self.caminho_arquivo_agenda, index=False)
+
+            else:
+                print("\nData/Horário não encontrados")
+            
+        else:
+            print('Paciente não encontrado')
+
+    def reagendar_visita(self, nome_paciente, data, horario, nova_data, novo_horario):
+        try:
+            agenda = pandas.read_csv(self.caminho_arquivo_agenda)
+        except:
+            agenda = pandas.DataFrame()
+
+        if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
+
+            if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
+
+                print("\nAlterando")
+                indice = agenda[agenda["nome"] == nome_paciente]['data'].index[0]
+                agenda.loc[indice, ['data']] = [int(nova_data)]
+                agenda.loc[indice, ['horario']] = [int(novo_horario)]
+                agenda.to_csv(self.caminho_arquivo_agenda, index=False)
+
+            else:
+                print("\nData/Horário não encontrados")
+            
+        else:
+            print('Paciente não encontrado')
 
 agenda = AgendamentoControleVisitas()
 
@@ -135,3 +171,8 @@ agenda.controlar_acesso('54342632', 'jose')
 agenda.controlar_acesso('92658651', 'ana')
 
 agenda.notificar_visita()
+
+agenda.cancelar_visita('julia', '16', '5')
+agenda.cancelar_visita('julia', '6', '11')
+
+agenda.reagendar_visita('jonas', '28', '22', '14', '7')
