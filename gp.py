@@ -148,9 +148,7 @@ class GestaoEquipe:
         else:
             print("Profissional não encontrado.")
 
-
-
-mamao = GestaoEquipe()
+Gestao = GestaoEquipe()
 
 while True:
     opcao = input("1 - Adicionar profissional de saúde\n2 - Editar profissional\n3 - Registrar horas\n4 - Sair\nEscolha uma opção: ")
@@ -164,8 +162,8 @@ while True:
         inicio_turno = int(input('Início do turno: '))
         fim_turno = int(input('Fim do turno: '))
         dias = input('Dias de trabalho (Separados por vírgula): ')
-        mamao.cadastro_alocar_plantoes(nome, cargo, experiencia, dados, competencia, inicio_turno, fim_turno, dias)
-        mamao.criar_grupos_e_salvar()
+        Gestao.cadastro_alocar_plantoes(nome, cargo, experiencia, dados, competencia, inicio_turno, fim_turno, dias)
+        Gestao.criar_grupos_e_salvar()
     
     elif opcao == '2':
         nome_profissional = input('Nome do profissional que deseja editar: ')
@@ -175,8 +173,8 @@ while True:
         novo_inicio_turno = int(input('Novo Início do turno: '))
         novo_fim_turno = int(input('Novo Fim do turno: '))
         novo_dias = input('Novos Dias de trabalho (Separados por vírgula): ')
-        mamao.editar_profissional(nome_profissional, nova_experiencia, novo_dados, nova_competencia, novo_inicio_turno, novo_fim_turno, novo_dias)
-        mamao.criar_grupos_e_salvar() 
+        Gestao.editar_profissional(nome_profissional, nova_experiencia, novo_dados, nova_competencia, novo_inicio_turno, novo_fim_turno, novo_dias)
+        Gestao.criar_grupos_e_salvar() 
     
     elif opcao == '3':
         nome_prof = input('Nome: ')
@@ -185,7 +183,7 @@ while True:
         turno_fim = float(input('Fim do turno: '))
         pausas = float(input('Pausas: '))
         horas_extras = float(input('Horas extras: '))
-        mamao.registrar_horas(nome_prof, dia, turno_inicio, turno_fim, pausas, horas_extras)
+        Gestao.registrar_horas(nome_prof, dia, turno_inicio, turno_fim, pausas, horas_extras)
     
     elif opcao == '4':
         break
