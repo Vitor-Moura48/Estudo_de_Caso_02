@@ -1,13 +1,17 @@
 import os
 import pandas
+import time
 
 class AgendamentoControleVisitas:
     def __init__(self):
+        self.caminho_arquivo_agenda = "database/agenda_de_visitas.csv"
         self.caminho_arquivo_restricoes = "database/restricoes_de_visitas.csv"
         self.caminho_arquivo_visitantes = "database/registo_de_visitantes.csv"
         self.caminho_arquivo_acesso = "database/controle_de_acesso_de_visitantes.csv"
 
-
+        if not os.path.exists(self.caminho_arquivo_agenda):
+            arquivo = pandas.DataFrame()
+            arquivo.to_csv(self.caminho_arquivo_agenda, index=False)
         if not os.path.exists(self.caminho_arquivo_restricoes):
             estrutura = {
                 'max de visitantes': [1],
@@ -23,28 +27,30 @@ class AgendamentoControleVisitas:
             arquivo.to_csv(self.caminho_arquivo_acesso, index=False)
     
     def agendar_visita(self, nome_paciente, data, horario):
-        caminho_arquivo_agenda = f"database/agenda_de_visitas_{nome_paciente}.csv"
+        try:
+            agenda = pandas.read_csv(self.caminho_arquivo_agenda)
+        except:
+            agenda = pandas.DataFrame()
 
-        if not os.path.exists(caminho_arquivo_agenda):
-            estrutura = [
-                [True] * 24 for i in range(30)
-                ]
-            arquivo = pandas.DataFrame(estrutura)
-            arquivo.to_csv(caminho_arquivo_agenda, index=False)
-
-        agenda = pandas.read_csv(caminho_arquivo_agenda)
         restricoes = pandas.read_csv(self.caminho_arquivo_restricoes)
+        
+        if horario in restricoes.columns.astype(str).to_list():
+            print("\nEste horário está restrito!")
 
-        if agenda.iloc[int(data)].iloc[int(horario)] == True:
-            if horario in restricoes.columns.astype(str).to_list():
-                print("\nEste horário está restrito!")
+        else:
+            if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
+                if agenda[agenda["nome"] == nome_paciente]['data'].values[0] and agenda[agenda["nome"] == nome_paciente]['horario'].values[0]:
+                    print("Horário indisponível")
+                
             else:
                 print('\npode agendar')
-                agenda.iloc[data].iloc[horario] = False 
-                agenda.to_csv(caminho_arquivo_agenda, index=False)
-        else:
-            print("Não foi possível agendar! Horário indisponível!")
-        
+                paciente = pandas.DataFrame({'nome': [nome_paciente], 'data': [data], 'horario': [horario]})
+
+                if agenda.empty:
+                    paciente.to_csv(self.caminho_arquivo_agenda, index=False, mode="a")
+                else:
+                    paciente.to_csv(self.caminho_arquivo_agenda, index=False, mode="a", header=False)
+       
     def restringir_visitas(self, visitantes_por_paciente, duracao_maxima, horario_restrito):
         restricoes = pandas.read_csv(self.caminho_arquivo_restricoes)
 
@@ -94,7 +100,21 @@ class AgendamentoControleVisitas:
                 novo_controle.to_csv(self.caminho_arquivo_acesso, index=False, mode="a")
             else:
                 novo_controle.to_csv(self.caminho_arquivo_acesso, index=False, mode="a", header=False)
+    
+    def notificar_visita(self):
 
+        tempo_atual = time.localtime()
+        ano = tempo_atual.tm_year
+        mes = tempo_atual.tm_mon
+        dia = tempo_atual.tm_mday
+
+        print(f"\nVisita Marcada para amanhã: {ano}-{mes}-{dia}")
+    
+    def cancelar_visita(self):
+        pass
+    
+    def reagendar_visita(self):
+        pass
 
 agenda = AgendamentoControleVisitas()
 
@@ -113,3 +133,5 @@ agenda.registrar_visitante('isadora', '92658651', 'amiga', 'joao')
 
 agenda.controlar_acesso('54342632', 'jose')
 agenda.controlar_acesso('92658651', 'ana')
+
+agenda.notificar_visita()
