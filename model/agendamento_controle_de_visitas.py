@@ -34,14 +34,18 @@ class AgendamentoControleVisitas:
 
         restricoes = pandas.read_csv(self.caminho_arquivo_restricoes)
         
+        # confere se o horário selecionado está restrito
         if horario in restricoes.columns.astype(str).to_list():
             print("\nEste horário está restrito!")
 
+        # se não estiver, agenda a visita
         else:
+            # se já houver visita naquele horario para o paciente, não pode agendar
             if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
                 if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
                     print("Horário indisponível")
-                
+            
+            # se estiver disponível, agenda normalmente
             else:
                 print('\npode agendar')
                 paciente = pandas.DataFrame({'nome': [nome_paciente], 'data': [data], 'horario': [horario]})
@@ -54,11 +58,14 @@ class AgendamentoControleVisitas:
     def restringir_visitas(self, visitantes_por_paciente, duracao_maxima, horario_restrito):
         restricoes = pandas.read_csv(self.caminho_arquivo_restricoes)
 
+        # altera os dados de acordo com os argumentos
         restricoes['max de visitantes'] = [visitantes_por_paciente]
         restricoes['duracao_maxima'] = [duracao_maxima]
    
+        # adiciona uma coluna restringindo a hora selecionada
         if horario_restrito not in restricoes.columns.astype(str).to_list():
            restricoes[horario_restrito] = 'restrito'
+        # se aquela hora já estava restrita, apenas manda uma mensagem
         else:
             print('\nEste horário já está restrito')
 
@@ -75,8 +82,10 @@ class AgendamentoControleVisitas:
         except:
             arquivo_acesso = pandas.DataFrame()
 
+        # confere se aquele visitante está com acesso restrito ao paciente
         if not arquivo_acesso.empty and  identificacao in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
             print("\nVisitante com restrição!")
+        # se não estiver, cria um registro do visitante
         else:
             novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
 
@@ -91,8 +100,10 @@ class AgendamentoControleVisitas:
         except:
             arquivo_acesso = pandas.DataFrame()
     
+        # se o visitande já estiver restrito para aquele paciente, apenas printa uam mensagem
         if not arquivo_acesso.empty and identificacao_visitante in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
-            print("\nVisitante já cadastrado!")
+            print("\nVisitante já está restrito!")
+        # se não, adiciona aquele visitante como restrito para o paciente do argumento
         else:
             novo_controle = pandas.DataFrame({'identificacao_visitante': [identificacao_visitante], 'nome_paciente': [nome_paciente]})
 
@@ -103,6 +114,7 @@ class AgendamentoControleVisitas:
     
     def notificar_visita(self):
 
+        # (deve ser chamada por outra função), printa a data do dia de amanhã. Deve ser chamada quando faltar um dia para uma determinada visita
         tempo_atual = time.localtime()
         ano = tempo_atual.tm_year
         mes = tempo_atual.tm_mon
@@ -116,17 +128,21 @@ class AgendamentoControleVisitas:
         except:
             agenda = pandas.DataFrame()
 
+        # se aquele paciente estiver no registro:
         if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
 
+            # confere se a visita naquela data e horário estão no registro, se estiver, remove
             if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
 
                 print("\nRemovendo")
-                agenda.drop(agenda[agenda["nome"] == nome_paciente]['data'].index[0], inplace=True)
+                agenda.drop(agenda[agenda["nome"] == nome_paciente]['data'].index[0], inplace=True) # faltam mais verificações
                 agenda.to_csv(self.caminho_arquivo_agenda, index=False)
-
+            
+            # se a visita não estiver, printa a informação
             else:
                 print("\nData/Horário não encontrados")
-            
+
+        # se o paciente não estiver no registro, apenas nofica a situação
         else:
             print('Paciente não encontrado')
 
@@ -135,23 +151,28 @@ class AgendamentoControleVisitas:
             agenda = pandas.read_csv(self.caminho_arquivo_agenda)
         except:
             agenda = pandas.DataFrame()
-
+        
+        # confere se o paciente está na lista de registro
         if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
 
+            # se aquela data e horário estiverem na lista de registro, altera os dados com os argumentos passados
             if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
 
                 print("\nAlterando")
-                indice = agenda[agenda["nome"] == nome_paciente]['data'].index[0]
+                indice = agenda[agenda["nome"] == nome_paciente]['data'].index[0]  # faltam verificações
                 agenda.loc[indice, ['data']] = [int(nova_data)]
                 agenda.loc[indice, ['horario']] = [int(novo_horario)]
                 agenda.to_csv(self.caminho_arquivo_agenda, index=False)
 
+            # se não encontrar, notifica
             else:
                 print("\nData/Horário não encontrados")
             
+        # se não estiver, notifica
         else:
             print('Paciente não encontrado')
 
+# testando as funções
 agenda = AgendamentoControleVisitas()
 
 agenda.agendar_visita('joao', '4', '15')
