@@ -1,5 +1,6 @@
 import csv
 import datetime as dt
+import pandas
 
 class SistemaHospital:
     def __init__(self):
@@ -62,31 +63,13 @@ class SistemaHospital:
             if opcao.lower() != 's':
                 break
 
-    def listar_pacientes_e_prontuarios(self):
-        for i, paciente in enumerate(self.lista_de_todos_os_pacientes):
-            print(f'\n** Paciente {i + 1} **')
-            print(f'Data de Criacao: {paciente["Data de Criacao"]}')
-            print(f'Nome: {paciente["Nome"]}')
-            print(f'Idade: {paciente["Idade"]}')
-            print(f'Sexo: {paciente["Sexo"]}')
-            print(f'Identidade: {paciente["Identidade"]}')
-            print(f'Contato de Emergencia: {paciente["Contato de Emergencia"]}')
-            print(f'Estado: {paciente["Estado"]}')
-            print('\n** prontuarios **')
-            prontuarios = paciente["prontuario"]
-            if prontuarios:
-                for j, prontuario in enumerate(prontuarios):
-                    print(f'** prontuario {j + 1} **')
-                    print(f'Data do diagnostico: {prontuario["Data do diagnostico"]}')
-                    print(f'diagnostico: {prontuario["diagnostico"]}')
-                    print(f'condicao: {prontuario["condicao"]}')
-                    print(f'Recomendacao de Medicacao: {prontuario["Recomendacao de Medicacao"]}')
-                    if prontuario['Historico Medico']:
-                        print(f'Historico Medico: {prontuario["Historico Medico"]}')
-                    if prontuario['Exames']:
-                        print(f'Exames: {prontuario["Exames"]}')
-            else:
-                print('Nenhum prontuario cadastrado para este paciente.')
+    def listar_pacientes_e_prontuarios(self, nome):
+        arquivo = pandas.read_csv('database/pacientes.csv')
+        arquivo_prontuario = pandas.read_csv(f'database/prontuarios/{nome}.csv')
+
+        print()
+        print(arquivo.to_csv(index=False))
+        print(arquivo_prontuario.to_csv(index=False))
 
 if __name__ == "__main__":
     modulo_cadastro_pacientes = SistemaHospital()
@@ -116,3 +99,7 @@ if __name__ == "__main__":
             break
         else:
             print('Opção inválida. Por favor, escolha uma opção válida.')
+
+
+teste = SistemaHospital()
+teste.listar_pacientes_e_prontuarios('Rafael Santana Nogueira')
