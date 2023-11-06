@@ -69,13 +69,15 @@ class SistemaHospital:
         except:
             arquivo = pandas.DataFrame()
         
-        if nome in arquivo['Nome'].astype(str).to_list():
+        if nome in arquivo['Nome'].astype(str).to_list(): 
+            try:
+                arquivo_prontuario = pandas.read_csv(f'database/prontuarios/{nome}.csv')
+            except:
+                arquivo_prontuario = pandas.DataFrame()
+
             print(arquivo[arquivo['Nome'] == nome])
             print(arquivo_prontuario.to_csv(index=False))
         else:
             print("Nome não encontrado")
 
-        try:
-            arquivo_prontuario = pandas.read_csv(f'database/prontuarios/{nome}.csv')
-        except:
-            arquivo_prontuario = pandas.DataFrame()
+       
