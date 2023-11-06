@@ -48,7 +48,7 @@ class SistemaHospital:
             prontuario['Exames'] = [input('Digite os exames (opcional): ')]
 
             prontuario = pandas.DataFrame(prontuario)
-            prontuario.to_csv(f'database/prontuarios/{paciente}.csv', mode='a')
+            prontuario.to_csv(f'database/prontuarios/{paciente}.csv', mode='a', index=False)
 
             print('prontuario cadastrado com sucesso!\n')
 
