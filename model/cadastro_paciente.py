@@ -40,15 +40,15 @@ class SistemaHospital:
     def cadastrar_prontuario(self, paciente):
         while True:
             prontuario = {}
-            prontuario['Data do diagnostico'] = self.adicionar_data()
-            prontuario['diagnostico'] = input('Digite o diagnostico do paciente: ')
-            prontuario['condicao'] = input('Digite a condicao do paciente: ')
-            prontuario['Recomendacao de Medicacao'] = input('Digite a Recomendacao de Medicacao: ')
-            prontuario['Historico Medico'] = input('Digite o Historico Medico (opcional): ')
-            prontuario['Exames'] = input('Digite os exames (opcional): ')
+            prontuario['Data do diagnostico'] = [self.adicionar_data()]
+            prontuario['diagnostico'] = [input('Digite o diagnostico do paciente: ')]
+            prontuario['condicao'] = [input('Digite a condicao do paciente: ')]
+            prontuario['Recomendacao de Medicacao'] = [input('Digite a Recomendacao de Medicacao: ')]
+            prontuario['Historico Medico'] = [input('Digite o Historico Medico (opcional): ')]
+            prontuario['Exames'] = [input('Digite os exames (opcional): ')]
 
             prontuario = pandas.DataFrame(prontuario)
-            prontuario.to_csv(f'database/prontuarios/{paciente}.csv')
+            prontuario.to_csv(f'database/prontuarios/{paciente}.csv', mode='a')
 
             print('prontuario cadastrado com sucesso!\n')
 
