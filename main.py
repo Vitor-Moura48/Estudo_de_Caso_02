@@ -58,9 +58,11 @@ try:
             case '2':
                 pass
             case '3':
-                pass
+                from controller.administracao_de_medicamentos_controller import run
+                run()
             case '4':
-                pass
+                from controller.agendamento_controle_de_visitas_controlelr import run
+                run()
             case '5':
                 pass
             case '6':
