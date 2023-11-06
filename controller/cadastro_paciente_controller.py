@@ -27,7 +27,8 @@ def run():
                 arquivo = pandas.read_csv('database/pacientes.csv')
             except:
                 arquivo = pandas.DataFrame()
-            if nome_paciente in arquivo['Nome'].astype(str).to_list(): 
+
+            if not arquivo.empty and nome_paciente in arquivo['Nome'].astype(str).to_list(): 
                 modulo_cadastro_pacientes.cadastrar_prontuario(nome_paciente)
             else:
                 print('Paciente não encontrado.')

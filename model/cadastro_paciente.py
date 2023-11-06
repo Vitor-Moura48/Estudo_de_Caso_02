@@ -47,15 +47,8 @@ class SistemaHospital:
             prontuario['Historico Medico'] = input('Digite o Historico Medico (opcional): ')
             prontuario['Exames'] = input('Digite os exames (opcional): ')
 
-            paciente['prontuario'].append(prontuario)
-
-            
-            nome_paciente = paciente['Nome']
-            with open(f'database/prontuarios/{nome_paciente}.csv', mode='a', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=prontuario.keys())
-                if file.tell() == 0:
-                    writer.writeheader()
-                writer.writerow(prontuario)
+            prontuario = pandas.DataFrame(prontuario)
+            prontuario.to_csv(f'database/prontuarios/{paciente}.csv')
 
             print('prontuario cadastrado com sucesso!\n')
 
@@ -69,7 +62,7 @@ class SistemaHospital:
         except:
             arquivo = pandas.DataFrame()
         
-        if nome in arquivo['Nome'].astype(str).to_list(): 
+        if not arquivo.empty and nome in arquivo['Nome'].astype(str).to_list(): 
             try:
                 arquivo_prontuario = pandas.read_csv(f'database/prontuarios/{nome}.csv')
             except:
