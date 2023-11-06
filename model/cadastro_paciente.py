@@ -4,7 +4,7 @@ import pandas
 
 class SistemaHospital:
     def __init__(self):
-        self.lista_de_todos_os_pacientes = []
+        self.caminho_pacientes = 'database/pacientes.csv'
 
     def adicionar_data(self):
         data_criacao = dt.datetime.now()
@@ -22,7 +22,8 @@ class SistemaHospital:
             novo_paciente['Estado'] = input('Digite o estado do paciente (Leve, Moderado ou Grave): ')
             novo_paciente['prontuario'] = []
 
-            self.lista_de_todos_os_pacientes.append(novo_paciente)
+            novo_paciente = pandas.DataFrame(novo_paciente)
+            novo_paciente.to_csv(self.caminho_pacientes, index=False, mode="a")
 
             
             with open('database/pacientes.csv', mode='a', newline='') as file:
