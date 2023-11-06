@@ -38,27 +38,37 @@ class AgendamentoControleVisitas:
             agenda = pandas.DataFrame()
 
         restricoes = pandas.read_csv(self.caminho_arquivo_restricoes)
+
+        try:
+            arquivo_pacientes = pandas.read_csv("database/pacientes.csv")
+        except:
+            arquivo_pacientes = pandas.DataFrame()
+
+        if nome_paciente in arquivo_pacientes['Nome'].astype(str).to_list():
         
-        # confere se o horário selecionado está restrito
-        if horario in restricoes.columns.astype(str).to_list():
-            print(f"\n{cor_mensagem_erro}Este horário está restrito!{Style.RESET_ALL}\n")
+            # confere se o horário selecionado está restrito
+            if horario in restricoes.columns.astype(str).to_list():
+                print(f"\n{cor_mensagem_erro}Este horário está restrito!{Style.RESET_ALL}\n")
 
-        # se não estiver, agenda a visita
-        else:
-            # se já houver visita naquele horario para o paciente, não pode agendar
-            if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
-                if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
-                    print(f"\n{cor_mensagem_erro}Horário indisponível{Style.RESET_ALL}\n")
-            
-            # se estiver disponível, agenda normalmente
+            # se não estiver, agenda a visita
             else:
-                print(f'\n{cor_verde}Agendando...{Style.RESET_ALL}\n')
-                paciente = pandas.DataFrame({'nome': [nome_paciente], 'data': [data], 'horario': [horario]})
-
-                if agenda.empty:
-                    paciente.to_csv(self.caminho_arquivo_agenda, index=False, mode="a")
+                # se já houver visita naquele horario para o paciente, não pode agendar
+                if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
+                    if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
+                        print(f"\n{cor_mensagem_erro}Horário indisponível{Style.RESET_ALL}\n")
+                
+                # se estiver disponível, agenda normalmente
                 else:
-                    paciente.to_csv(self.caminho_arquivo_agenda, index=False, mode="a", header=False)
+                    print(f'\n{cor_verde}Agendando...{Style.RESET_ALL}\n')
+                    paciente = pandas.DataFrame({'nome': [nome_paciente], 'data': [data], 'horario': [horario]})
+
+                    if agenda.empty:
+                        paciente.to_csv(self.caminho_arquivo_agenda, index=False, mode="a")
+                    else:
+                        paciente.to_csv(self.caminho_arquivo_agenda, index=False, mode="a", header=False)
+
+        else:
+            print(f"\n{cor_mensagem_erro}Paciente não encontrado{Style.RESET_ALL}\n")
        
     def restringir_visitas(self, visitantes_por_paciente, duracao_maxima, horario_restrito):
         restricoes = pandas.read_csv(self.caminho_arquivo_restricoes)
@@ -86,43 +96,63 @@ class AgendamentoControleVisitas:
             arquivo_acesso = pandas.read_csv(self.caminho_arquivo_acesso)
         except:
             arquivo_acesso = pandas.DataFrame()
+        
+        try:
+            arquivo_pacientes = pandas.read_csv("database/pacientes.csv")
+        except:
+            arquivo_pacientes = pandas.DataFrame()
 
-        # confere se aquele visitante está com acesso restrito ao paciente
-        if not arquivo_acesso.empty and  identificacao in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
-            print(f"\n{cor_mensagem_erro}Visitante com restrição!{Style.RESET_ALL}\n")
+        if nome_paciente in arquivo_pacientes['Nome'].astype(str).to_list():
 
-        # se não estiver, cria um registro do visitante
-        else:
-            # verifica se já existe um registro igual, se não houver, cria o registro
-            if arquivo_visitantes.empty or arquivo_visitantes[(arquivo_visitantes['identificacao'] == int(identificacao)) & (arquivo_visitantes['nome_paciente'] == nome_paciente)].empty:
+            # confere se aquele visitante está com acesso restrito ao paciente
+            if not arquivo_acesso.empty and  identificacao in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
+                print(f"\n{cor_mensagem_erro}Visitante com restrição!{Style.RESET_ALL}\n")
 
-                print(f'\n{cor_verde}registrando visitante...{Style.RESET_ALL}\n')
-                novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
-                if arquivo_visitantes.empty:
-                    novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a")
-                else:
-                    novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a", header=False)
-            # se já houver, não cria outro
+            # se não estiver, cria um registro do visitante
             else:
-                print(f"\n{cor_mensagem_erro}Visitante já registrado com esse paciente{Style.RESET_ALL}\n")
+                # verifica se já existe um registro igual, se não houver, cria o registro
+                if arquivo_visitantes.empty or arquivo_visitantes[(arquivo_visitantes['identificacao'] == int(identificacao)) & (arquivo_visitantes['nome_paciente'] == nome_paciente)].empty:
+
+                    print(f'\n{cor_verde}registrando visitante...{Style.RESET_ALL}\n')
+                    novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
+                    if arquivo_visitantes.empty:
+                        novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a")
+                    else:
+                        novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a", header=False)
+                # se já houver, não cria outro
+                else:
+                    print(f"\n{cor_mensagem_erro}Visitante já registrado com esse paciente{Style.RESET_ALL}\n")
+        
+        else:
+            print(f"\n{cor_mensagem_erro}Paciente não encontrado{Style.RESET_ALL}\n")
     
     def controlar_acesso(self, identificacao_visitante, nome_paciente):
         try:
             arquivo_acesso = pandas.read_csv(self.caminho_arquivo_acesso)
         except:
             arquivo_acesso = pandas.DataFrame()
-    
-        # se o visitande já estiver restrito para aquele paciente, apenas printa uam mensagem
-        if not arquivo_acesso.empty and identificacao_visitante in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
-            print(f"\n{cor_mensagem_erro}Visitante já está restrito!{Style.RESET_ALL}\n")
-        # se não, adiciona aquele visitante como restrito para o paciente do argumento
-        else:
-            novo_controle = pandas.DataFrame({'identificacao_visitante': [identificacao_visitante], 'nome_paciente': [nome_paciente]})
+        
+        try:
+            arquivo_pacientes = pandas.read_csv("database/pacientes.csv")
+        except:
+            arquivo_pacientes = pandas.DataFrame()
 
-            if arquivo_acesso.empty:
-                novo_controle.to_csv(self.caminho_arquivo_acesso, index=False, mode="a")
+        if nome_paciente in arquivo_pacientes['Nome'].astype(str).to_list():
+    
+            # se o visitande já estiver restrito para aquele paciente, apenas printa uam mensagem
+            if not arquivo_acesso.empty and identificacao_visitante in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
+                print(f"\n{cor_mensagem_erro}Visitante já está restrito!{Style.RESET_ALL}\n")
+            # se não, adiciona aquele visitante como restrito para o paciente do argumento
             else:
-                novo_controle.to_csv(self.caminho_arquivo_acesso, index=False, mode="a", header=False)
+                novo_controle = pandas.DataFrame({'identificacao_visitante': [identificacao_visitante], 'nome_paciente': [nome_paciente]})
+
+                if arquivo_acesso.empty:
+                    novo_controle.to_csv(self.caminho_arquivo_acesso, index=False, mode="a")
+                else:
+                    novo_controle.to_csv(self.caminho_arquivo_acesso, index=False, mode="a", header=False)
+
+        else:
+            print(f"\n{cor_mensagem_erro}Paciente não encontrado{Style.RESET_ALL}\n")
     
     def notificar_visita(self):
 
