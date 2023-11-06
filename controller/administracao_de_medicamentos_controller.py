@@ -14,7 +14,7 @@ def run():
                           choices=[
                               ('1 - Cadastrar medicamento', '1'),
                               ('2 - Registrar lote', '2'),
-                              ('3 - Rastrear lote', '3')
+                              ('3 - Rastrear lote', '3'),
                               ('4 - Registrar administração', '4'),
                               ('5 - Informações de medicação', '5'),       
                           ])

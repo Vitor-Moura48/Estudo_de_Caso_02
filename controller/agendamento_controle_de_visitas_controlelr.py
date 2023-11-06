@@ -14,7 +14,7 @@ def run():
                           choices=[
                               ('1 - Agendar visita', '1'),
                               ('2 - Restringir visita', '2'),
-                              ('3 - Registrar visita', '3')
+                              ('3 - Registrar visita', '3'),
                               ('4 - Controloar visita', '4'),
                               ('5 - Cancelar visita', '5'),       
                               ('6 - Reagendar_visita', '6'), 
