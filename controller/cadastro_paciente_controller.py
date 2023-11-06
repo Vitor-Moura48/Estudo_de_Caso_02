@@ -1,6 +1,7 @@
 import inquirer
 from model.cadastro_paciente import SistemaHospital
 from colorama import init, Fore, Style
+import pandas
 
 init()
 cor_mensagem_erro = Fore.RED
@@ -21,9 +22,13 @@ def run():
         elif opcao == '2':
             modulo_cadastro_pacientes.listar_pacientes_e_prontuarios(input("Digite o nome"))
             nome_paciente = input('Digite o nome do paciente para cadastrar um prontuario: ')
-            paciente_encontrado = next((p for p in modulo_cadastro_pacientes.lista_de_todos_os_pacientes if p['Nome'] == nome_paciente), None)
-            if paciente_encontrado:
-                modulo_cadastro_pacientes.cadastrar_prontuario(paciente_encontrado)
+
+            try:
+                arquivo = pandas.read_csv('database/pacientes.csv')
+            except:
+                arquivo = pandas.DataFrame()
+            if nome_paciente in arquivo['Nome'].astype(str).to_list(): 
+                modulo_cadastro_pacientes.cadastrar_prontuario(nome_paciente)
             else:
                 print('Paciente não encontrado.')
         elif opcao == '3':

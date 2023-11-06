@@ -25,7 +25,6 @@ class SistemaHospital:
             novo_paciente = pandas.DataFrame(novo_paciente)
             novo_paciente.to_csv(self.caminho_pacientes, index=False, mode="a")
 
-            
             with open('database/pacientes.csv', mode='a', newline='') as file:
                 writer = csv.DictWriter(file, fieldnames=novo_paciente.keys())
                 if file.tell() == 0:
