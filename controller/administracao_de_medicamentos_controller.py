@@ -16,7 +16,8 @@ def run():
                               ('2 - Registrar lote', '2'),
                               ('3 - Rastrear lote', '3'),
                               ('4 - Registrar administração', '4'),
-                              ('5 - Informações de medicação', '5'),       
+                              ('5 - Informações de medicação', '5'),   
+                              ('6 - Sair do módulo', '6')    
                           ])
         ]
 
@@ -104,3 +105,7 @@ def run():
             nome = respostas_registro['nome']
             
             modulo_administacao_medicamentos.informacoes_de_medicacao(nome)
+        
+        elif opcao == '6':
+            print('Saindo do módulo de administração de medicamentos...')
+            break

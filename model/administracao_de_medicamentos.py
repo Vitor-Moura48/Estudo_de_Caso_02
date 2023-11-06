@@ -1,5 +1,6 @@
 import pandas
 import os
+import inquirer
 
 class AdmMedicamentos:
     def __init__(self):
@@ -39,7 +40,7 @@ class AdmMedicamentos:
        
         # se o arquivo não estiver vazio e o nome não estiver ne lista já registrada
         if not arquivo.empty and nome in arquivo['nome'].values:    
-            print("Medicamento já cadastrado!!")
+            print("\nMedicamento já cadastrado!!\n")
         # adiciona o nome junto com os dados
         else:
             novo_medicamento = {'nome': [nome],
@@ -86,7 +87,7 @@ class AdmMedicamentos:
             selecionado = input("medicamento: ")
             # se o registro não estiver vazio e o lote já foi registrado
             if not arquivo_registro.empty and lote in arquivo_registro['lote'].astype(str).to_list():    
-                print("\nLote já existe!")
+                print("\nLote já existe!\n")
 
             # adiciona o lote no arquivo de registro
             else: 
@@ -105,14 +106,14 @@ class AdmMedicamentos:
                     novo_lote.to_csv(self.caminho_arquivo_registro_lotes, index=False, mode="a", header=False)
                 
                 # adiciona a quantidade no arquivo de estoque
-                arquivo_estoque[selecionado] += quantidade
+                arquivo_estoque[selecionado] += int(quantidade)
                 arquivo_estoque.to_csv(self.caminho_arquivo_estoque, index=False)
 
         else:
-            print("\nSem medicamentos registrados!")
+            print("\nSem medicamentos registrados!\n")
     
     def alerta(self, nome, quantidade):
-        print(f"\n{nome} -- Estoque baixo: {quantidade}!")
+        print(f"\n{nome} -- Estoque baixo: {quantidade}!\n")
     
     def rastrear_lotes(self, lote):
         try:
@@ -124,13 +125,13 @@ class AdmMedicamentos:
             # se o lote for encontrado, printa as informações
             if lote in arquivo_registro['lote'].astype(str).to_list():
                 print('\nencontrado:')
-                print(arquivo_registro.loc[arquivo_registro['lote'].astype(str) == lote].to_csv(index=False))
+                print(f"{arquivo_registro.loc[arquivo_registro['lote'].astype(str) == lote].to_csv(index=False)}\n")
             # se não for encontrado, printa todos os lotes
             else:
-                print("\nLote não encontrado, registro de todos os lotes:")
+                print("\nLote não encontrado, registro de todos os lotes:\n")
                 print(arquivo_registro.to_csv(index=False))
         else:
-            print("\nRegistro de lotes vazio!")
+            print("\nRegistro de lotes vazio!\n")
     
     def registrar_administracao(self, nome, data, horario, paciente, dosagem, responsavel):
         try:
@@ -158,7 +159,7 @@ class AdmMedicamentos:
             if arquivo_estoque[nome][0] < 10:
                 self.alerta(nome, arquivo_estoque[nome][0])
         else:
-            print("Medicamento indisponível! Fora de estoque!")
+            print("\nMedicamento indisponível! Fora de estoque!\n")
     
     def informacoes_de_medicacao(self, nome):
         try:
@@ -171,9 +172,9 @@ class AdmMedicamentos:
             if nome in arquivo['nome'].astype(str).to_csv():
                print(f"\n{arquivo.loc[arquivo['nome'].astype(str) == nome].to_csv(index=False)}")
             else:
-               print("\nMedicamento não encontrado!")
+               print("\nMedicamento não encontrado!\n")
         else:
-            print("\nNão há medicamentos para serem consultados")
+            print("\nNão há medicamentos para serem consultados\n")
     
             
     
