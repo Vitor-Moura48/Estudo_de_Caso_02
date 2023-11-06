@@ -1,6 +1,11 @@
 import os
 import pandas
 import time
+from colorama import init, Fore, Style
+
+init()
+cor_mensagem_erro = Fore.RED
+cor_verde = Fore.GREEN
 
 class AgendamentoControleVisitas:
     def __init__(self):
@@ -36,18 +41,18 @@ class AgendamentoControleVisitas:
         
         # confere se o horário selecionado está restrito
         if horario in restricoes.columns.astype(str).to_list():
-            print("\nEste horário está restrito!\n")
+            print(f"\n{cor_mensagem_erro}Este horário está restrito!{Style.RESET_ALL}\n")
 
         # se não estiver, agenda a visita
         else:
             # se já houver visita naquele horario para o paciente, não pode agendar
             if not agenda.empty and nome_paciente in agenda['nome'].astype(str).to_list():
                 if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
-                    print("\nHorário indisponível\n")
+                    print(f"\n{cor_mensagem_erro}Horário indisponível{Style.RESET_ALL}\n")
             
             # se estiver disponível, agenda normalmente
             else:
-                print('\nAgendando...\n')
+                print(f'\n{cor_verde}Agendando...{Style.RESET_ALL}\n')
                 paciente = pandas.DataFrame({'nome': [nome_paciente], 'data': [data], 'horario': [horario]})
 
                 if agenda.empty:
@@ -67,7 +72,7 @@ class AgendamentoControleVisitas:
            restricoes[horario_restrito] = 'restrito'
         # se aquela hora já estava restrita, apenas manda uma mensagem
         else:
-            print('\nEste horário já está restrito\n')
+            print(f'\n{cor_mensagem_erro}Este horário já está restrito{Style.RESET_ALL}\n')
 
         restricoes.to_csv(self.caminho_arquivo_restricoes, index=False)
     
@@ -84,14 +89,14 @@ class AgendamentoControleVisitas:
 
         # confere se aquele visitante está com acesso restrito ao paciente
         if not arquivo_acesso.empty and  identificacao in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
-            print("\nVisitante com restrição!\n")
+            print(f"\n{cor_mensagem_erro}Visitante com restrição!{Style.RESET_ALL}\n")
 
         # se não estiver, cria um registro do visitante
         else:
             # verifica se já existe um registro igual, se não houver, cria o registro
             if arquivo_visitantes.empty or arquivo_visitantes[(arquivo_visitantes['identificacao'] == int(identificacao)) & (arquivo_visitantes['nome_paciente'] == nome_paciente)].empty:
 
-                print('\nregistrando visitante\n')
+                print(f'\n{cor_verde}registrando visitante...{Style.RESET_ALL}\n')
                 novo_registro = pandas.DataFrame({'nome_visitante': [nome_visitante], 'identificacao': [identificacao], 'relacao_com_paciente': [relacao_com_paciente], 'nome_paciente': [nome_paciente]})
                 if arquivo_visitantes.empty:
                     novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a")
@@ -99,7 +104,7 @@ class AgendamentoControleVisitas:
                     novo_registro.to_csv(self.caminho_arquivo_visitantes, index=False, mode="a", header=False)
             # se já houver, não cria outro
             else:
-                print("\nVisitante já registrado com esse paciente\n")
+                print(f"\n{cor_mensagem_erro}Visitante já registrado com esse paciente{Style.RESET_ALL}\n")
     
     def controlar_acesso(self, identificacao_visitante, nome_paciente):
         try:
@@ -109,7 +114,7 @@ class AgendamentoControleVisitas:
     
         # se o visitande já estiver restrito para aquele paciente, apenas printa uam mensagem
         if not arquivo_acesso.empty and identificacao_visitante in arquivo_acesso['identificacao_visitante'].astype(str).to_csv(index=False) and nome_paciente in arquivo_acesso['nome_paciente'].astype(str).to_csv(index=False):
-            print("\nVisitante já está restrito!\n")
+            print(f"\n{cor_mensagem_erro}Visitante já está restrito!{Style.RESET_ALL}\n")
         # se não, adiciona aquele visitante como restrito para o paciente do argumento
         else:
             novo_controle = pandas.DataFrame({'identificacao_visitante': [identificacao_visitante], 'nome_paciente': [nome_paciente]})
@@ -127,7 +132,7 @@ class AgendamentoControleVisitas:
         mes = tempo_atual.tm_mon
         dia = tempo_atual.tm_mday
 
-        print(f"\nVisita Marcada para amanhã: {ano}-{mes}-{dia}\n")
+        print(f'\n{cor_verde}Visita Marcada para amanhã: {ano}-{mes}-{dia}{Style.RESET_ALL}\n')
     
     def cancelar_visita(self, nome_paciente, data, horario):
         try:
@@ -141,18 +146,18 @@ class AgendamentoControleVisitas:
             # confere se a visita naquela data e horário estão no registro, se estiver, remove
             if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
 
-                print("\nRemovendo\n")
+                print(f'\n{cor_verde}Removendo...{Style.RESET_ALL}\n')
                 indice = agenda[(agenda["nome"] == nome_paciente) & (agenda["data"] == int(data)) & (agenda['horario'] == int(horario))].index[0]
                 agenda.drop(indice, inplace=True)
                 agenda.to_csv(self.caminho_arquivo_agenda, index=False)
             
             # se a visita não estiver, printa a informação
             else:
-                print("\nData/Horário não encontrados\n")
+                print(f"\n{cor_mensagem_erro}Data/Horário não encontrados{Style.RESET_ALL}\n")
 
         # se o paciente não estiver no registro, apenas nofica a situação
         else:
-            print('\nPaciente não encontrado\n')
+            print(f"\n{cor_mensagem_erro}Paciente não encontrado{Style.RESET_ALL}\n")
 
     def reagendar_visita(self, nome_paciente, data, horario, nova_data, novo_horario):
         try:
@@ -166,7 +171,7 @@ class AgendamentoControleVisitas:
             # se aquela data e horário estiverem na lista de registro, altera os dados com os argumentos passados
             if str(agenda[agenda["nome"] == nome_paciente]['data'].values[0]) == data and str(agenda[agenda["nome"] == nome_paciente]['horario'].values[0]) == horario:
 
-                print("\nAlterando")
+                print(f"\n{cor_verde}Alterando...{Style.RESET_ALL}")
                 indice = agenda[(agenda["nome"] == nome_paciente) & (agenda["data"] == int(data)) & (agenda['horario'] == int(horario))].index[0]
                 agenda.loc[indice, ['data']] = [int(nova_data)]
                 agenda.loc[indice, ['horario']] = [int(novo_horario)]
@@ -174,11 +179,11 @@ class AgendamentoControleVisitas:
 
             # se não encontrar, notifica
             else:
-                print("\nData/Horário não encontrados\n")
+                print(f"\n{cor_mensagem_erro}Data/Horário não encontrados{Style.RESET_ALL}\n")
             
         # se não estiver, notifica
         else:
-            print('\nPaciente não encontrado\n')
+            print(f"\n{cor_mensagem_erro}Paciente não encontrado{Style.RESET_ALL}\n")
 
 
 # testando as funções
