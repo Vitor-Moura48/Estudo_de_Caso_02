@@ -3,9 +3,9 @@ import os
 
 class GestaoEquipe:
     def __init__(self):
-        self.profissionais = "profissionais.csv"
-        self.equipes = "equipes.csv"
-        self.registrarhoras = "registrar.csv"
+        self.profissionais = "database/profissionais.csv"
+        self.equipes = "database/equipes.csv"
+        self.registrarhoras = "database/registrar_ponto_profissionais.csv"
 
         if not os.path.isfile(self.profissionais):
             with open(self.profissionais, 'w', newline='') as arquivo_csv:
@@ -34,10 +34,10 @@ class GestaoEquipe:
             escritor = csv.writer(arquivo_csv, delimiter=';')
             escritor.writerow(lista)
         
-            # Adicione o nome do profissional automaticamente no arquivo de registro de horas
+            # Adiciona o nome do profissional no registro de horas
         with open(self.registrarhoras, 'a', newline='') as arquivo_csv:
             escritor = csv.writer(arquivo_csv, delimiter=';')
-            # Crie uma linha vazia para preencher apenas o nome
+            # Criando uma linha vazia para colocar apenas o nome
             nome_profissional = [nome] + [''] * 30
             escritor.writerow(nome_profissional)
 
@@ -52,17 +52,17 @@ class GestaoEquipe:
         elif novo_inicio_turno == 22:
             disponibilidade = 'Noite'
 
-        # Abra o arquivo CSV e leia seu conteúdo
+        # Ler o arquivo CSV
         with open(self.profissionais, 'r', newline='') as arquivo_csv:
             leitor = csv.reader(arquivo_csv, delimiter=';')
             linhas = list(leitor)
 
         encontrado = False
 
-        # Percorra as linhas do arquivo para verificar se o nome já existe
+        # Percorre as linhas do arquivo para verificar se o nome já existe
         for linha in linhas:
             if linha and linha[0] == nome:
-                # Modifique os dados da linha se o nome já existir
+                # Modificando os dados da linha se o nome já existir
                 linha[2] = nova_experiencia
                 linha[3] = novo_dados
                 linha[4] = disponibilidade
@@ -74,7 +74,7 @@ class GestaoEquipe:
                 encontrado = True
 
         if encontrado:
-            # Escreva as modificações de volta no arquivo CSV
+            # Escreve as modificações de volta no arquivo CSV
             with open(self.profissionais, 'w', newline='') as arquivo_csv:
                 escritor = csv.writer(arquivo_csv, delimiter=';')
                 for linha in linhas:
@@ -119,28 +119,30 @@ class GestaoEquipe:
                 escritor.writerow([turno] + profissionais)
 
     def registrar_horas(self, nome_prof, dia, turno_inicio, turno_fim, pausas, horas_extras):
-        dia = int(dia)  # Converte para inteiro
-        turno_inicio = int(turno_inicio)  # Converte para inteiro
-        turno_fim = int(turno_fim)  # Converte para inteiro
+        dia = int(dia)  
+        turno_inicio = int(turno_inicio)  
+        turno_fim = int(turno_fim)  
 
+        # Vê as horas trabalhadas para questão de salário
         horas_trabalhadas = (turno_fim - turno_inicio) - pausas + horas_extras
+        
         with open(self.registrarhoras, 'r', newline='') as arquivo_csv:
             leitor = csv.reader(arquivo_csv, delimiter=';')
             linhas = list(leitor)
 
         encontrado = False
 
-        # Percorra as linhas do arquivo para encontrar o profissional pelo nome
+        # Percorre as linhas do arquivo para encontrar o profissional pelo nome
         for linha in linhas:
             if linha and linha[0] == nome_prof:
-                # Encontre a linha do profissional
+                # Quando encontra a linha do profissional
                 encontrado = True
-                # Adicione as horas trabalhadas ao dia especificado
+                # Adicionando as horas trabalhadas ao dia especificado
                 if 1 <= dia <= 30:
                     linha[dia] = horas_trabalhadas
 
         if encontrado:
-            # Escreva as modificações de volta no arquivo CSV
+            # Escreve as modificações de volta no arquivo CSV
             with open(self.registrarhoras, 'w', newline='') as arquivo_csv:
                 escritor = csv.writer(arquivo_csv, delimiter=';')
                 for linha in linhas:
