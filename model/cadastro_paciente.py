@@ -63,10 +63,9 @@ class SistemaHospital:
             arquivo = pandas.DataFrame()
         
         if not arquivo.empty and nome in arquivo['Nome'].astype(str).to_list(): 
-            try:
-                arquivo_prontuario = pandas.read_csv(f'database/prontuarios/{nome}.csv')
-            except:
-                arquivo_prontuario = pandas.DataFrame()
+
+            arquivo_prontuario = pandas.read_csv(f'database/prontuarios/{nome}.csv', encoding='iso-8859-1')
+           
 
             print(arquivo[arquivo['Nome'] == nome])
             print(arquivo_prontuario.to_csv(index=False))

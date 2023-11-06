@@ -20,7 +20,6 @@ def run():
         if opcao == '1':
             modulo_cadastro_pacientes.cadastrar_paciente()
         elif opcao == '2':
-            modulo_cadastro_pacientes.listar_pacientes_e_prontuarios(input("Digite o nome"))
             nome_paciente = input('Digite o nome do paciente para cadastrar um prontuario: ')
 
             try:
