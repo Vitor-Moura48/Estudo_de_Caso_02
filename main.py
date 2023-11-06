@@ -64,7 +64,8 @@ try:
                 from controller.agendamento_controle_de_visitas_controlelr import run
                 run()
             case '5':
-                pass
+                from controller.cadastro_paciente_controller import run ##MODULO 05
+                run() ##MODULO 05
             case '6':
                 from controller.gestao_equipe_controller import run
                 run()
