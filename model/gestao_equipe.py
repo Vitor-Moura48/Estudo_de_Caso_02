@@ -121,7 +121,9 @@ class GestaoEquipe:
     def registrar_horas(self, nome_prof, dia, turno_inicio, turno_fim, pausas, horas_extras):
         dia = int(dia)  
         turno_inicio = int(turno_inicio)  
-        turno_fim = int(turno_fim)  
+        turno_fim = int(turno_fim)
+        horas_extras = float(horas_extras)
+        pausas = float(pausas)
 
         # Vê as horas trabalhadas para questão de salário
         horas_trabalhadas = (turno_fim - turno_inicio) - pausas + horas_extras
@@ -150,42 +152,3 @@ class GestaoEquipe:
         else:
             print("Profissional não encontrado.")
 
-Gestao = GestaoEquipe()
-
-while True:
-    opcao = input("1 - Adicionar profissional de saúde\n2 - Editar profissional\n3 - Registrar horas\n4 - Sair\nEscolha uma opção: ")
-    
-    if opcao == '1':
-        nome = input('Nome: ')
-        cargo = input('Cargo: ')
-        experiencia = input('Experiência: ')
-        dados = input('Dados do Contato: ')
-        competencia = input('Competência: ')
-        inicio_turno = int(input('Início do turno: '))
-        fim_turno = int(input('Fim do turno: '))
-        dias = input('Dias de trabalho (Separados por vírgula): ')
-        Gestao.cadastro_alocar_plantoes(nome, cargo, experiencia, dados, competencia, inicio_turno, fim_turno, dias)
-        Gestao.criar_grupos_e_salvar()
-    
-    elif opcao == '2':
-        nome_profissional = input('Nome do profissional que deseja editar: ')
-        nova_experiencia = input('Nova Experiência: ')
-        novo_dados = input('Novos Dados do Contato: ')
-        nova_competencia = input('Nova Competência: ')
-        novo_inicio_turno = int(input('Novo Início do turno: '))
-        novo_fim_turno = int(input('Novo Fim do turno: '))
-        novo_dias = input('Novos Dias de trabalho (Separados por vírgula): ')
-        Gestao.editar_profissional(nome_profissional, nova_experiencia, novo_dados, nova_competencia, novo_inicio_turno, novo_fim_turno, novo_dias)
-        Gestao.criar_grupos_e_salvar() 
-    
-    elif opcao == '3':
-        nome_prof = input('Nome: ')
-        dia = float(input('Dia: '))
-        turno_inicio = float(input('Início do turno: '))
-        turno_fim = float(input('Fim do turno: '))
-        pausas = float(input('Pausas: '))
-        horas_extras = float(input('Horas extras: '))
-        Gestao.registrar_horas(nome_prof, dia, turno_inicio, turno_fim, pausas, horas_extras)
-    
-    elif opcao == '4':
-        break

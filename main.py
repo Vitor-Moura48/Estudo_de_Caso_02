@@ -60,13 +60,16 @@ try:
                 from controller.controle_equipamento_controller import run
                 run()
             case '3':
-                pass
+                from controller.administracao_de_medicamentos_controller import run
+                run()
             case '4':
-                pass
+                from controller.agendamento_controle_de_visitas_controlelr import run
+                run()
             case '5':
                 pass
             case '6':
-                pass
+                from controller.gestao_equipe_controller import run
+                run()
             case '7':
                 pass
             case '8':

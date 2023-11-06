@@ -18,6 +18,7 @@ def run():
                               ('4 - Controloar visita', '4'),
                               ('5 - Cancelar visita', '5'),       
                               ('6 - Reagendar_visita', '6'), 
+                              ('7 - Sair do módulo', '7')
                           ])
         ]
 
@@ -50,7 +51,7 @@ def run():
             perguntas_registro = [
                 inquirer.Text('visitantes_max', message='Digite o número máximo de visitantes'),
                 inquirer.Text('tempo_max', message='Digite tempo máximo por visita'),
-                inquirer.Text('horario_paara_restringir', message='Digite um horário para restringir'),
+                inquirer.Text('horario_para_restringir', message='Digite um horário para restringir'),
             ]
             respostas_registro = inquirer.prompt(perguntas_registro)
             
@@ -72,7 +73,7 @@ def run():
             nome_visitante = respostas_registro['nome_visitante']
             identificacao_visitante = respostas_registro['identificacao_visitante']
             relacao_com_paciente = respostas_registro['relacao_com_paciente']
-            nome_paciente = respostas_registro['numnome_pacienteero']
+            nome_paciente = respostas_registro['nome_paciente']
 
             modulo_agendamento_visitas.registrar_visitante(nome_visitante, identificacao_visitante, relacao_com_paciente, nome_paciente)
     
@@ -122,3 +123,7 @@ def run():
             nova_hora = respostas_registro['nova_hora']
             
             modulo_agendamento_visitas.reagendar_visita(nome, data, hora, nova_data, nova_hora)
+        
+        elif opcao == '7':
+            print('Saindo do módulo de agendamento de visitas...')
+            break
