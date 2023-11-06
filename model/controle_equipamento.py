@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 class ControleEquipamentos:
-    def __init__(self, arquivo_equipamentos='equipamentos.csv'):
+    def __init__(self, arquivo_equipamentos='database/equipamentos.csv'):
         self.arquivo_equipamentos = arquivo_equipamentos
         self.equipamentos = self.carregar_equipamentos()
 
