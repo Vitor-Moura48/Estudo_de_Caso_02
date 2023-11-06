@@ -54,9 +54,11 @@ try:
 
         match opcao:
             case '1':
-                pass
+                from controller.gestao_de_leito_controller import run
+                run()
             case '2':
-                pass
+                from controller.controle_equipamento_controller import run
+                run()
             case '3':
                 from controller.administracao_de_medicamentos_controller import run
                 run()
