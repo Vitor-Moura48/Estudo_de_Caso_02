@@ -1,6 +1,5 @@
 import pandas
 import os
-import json
 
 class AdmMedicamentos:
     def __init__(self):
