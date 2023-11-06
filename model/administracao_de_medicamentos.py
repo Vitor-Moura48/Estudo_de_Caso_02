@@ -177,29 +177,29 @@ class AdmMedicamentos:
     
             
     
-# testando as funções
-adiministrar_medicamento = AdmMedicamentos()
+# # testando as funções
+# adiministrar_medicamento = AdmMedicamentos()
 
-# argumentos: nome do remedio, principio ativo, dose do remedio, instruções de uso
-adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
-adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
-adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
-adiministrar_medicamento.cadastrar_medicamento("remedio 2", "ingerir 2", "200ml 2", "tomar 2")
+# # argumentos: nome do remedio, principio ativo, dose do remedio, instruções de uso
+# adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
+# adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
+# adiministrar_medicamento.cadastrar_medicamento("remedio", "ingerir", "200ml", "tomar")
+# adiministrar_medicamento.cadastrar_medicamento("remedio 2", "ingerir 2", "200ml 2", "tomar 2")
 
-# argumentos: número de lote, quantidade de medicamentos, data de validade, nome da fornecedora
-adiministrar_medicamento.registrar_lote('253255', 46, '14/03/2024', 'NEUXFJ')
-adiministrar_medicamento.registrar_lote('253255', 35, '14/03/2024', 'NEUXFJ')
-adiministrar_medicamento.registrar_lote('435636', 65, '14/07/2025', 'FEWFJ')
-adiministrar_medicamento.registrar_lote('789655', 465, '24/03/2024', 'REWBS')
+# # argumentos: número de lote, quantidade de medicamentos, data de validade, nome da fornecedora
+# adiministrar_medicamento.registrar_lote('253255', 46, '14/03/2024', 'NEUXFJ')
+# adiministrar_medicamento.registrar_lote('253255', 35, '14/03/2024', 'NEUXFJ')
+# adiministrar_medicamento.registrar_lote('435636', 65, '14/07/2025', 'FEWFJ')
+# adiministrar_medicamento.registrar_lote('789655', 465, '24/03/2024', 'REWBS')
 
-# argumentos: número de lote
-adiministrar_medicamento.rastrear_lotes('253255')
-adiministrar_medicamento.rastrear_lotes('963635')
+# # argumentos: número de lote
+# adiministrar_medicamento.rastrear_lotes('253255')
+# adiministrar_medicamento.rastrear_lotes('963635')
 
-# argumentos: nome do remédio, data da aplicação, horário da aplicação, nome do paciente, dose aplicada, nome do responsável
-adiministrar_medicamento.registrar_administracao('remedio', '04/11/2023', '12:00', 'rafael', '500ml', 'otton')
-adiministrar_medicamento.registrar_administracao('remedio 2', '04/11/2023', '15:00', 'otton', '350ml', 'rafael')
+# # argumentos: nome do remédio, data da aplicação, horário da aplicação, nome do paciente, dose aplicada, nome do responsável
+# adiministrar_medicamento.registrar_administracao('remedio', '04/11/2023', '12:00', 'rafael', '500ml', 'otton')
+# adiministrar_medicamento.registrar_administracao('remedio 2', '04/11/2023', '15:00', 'otton', '350ml', 'rafael')
 
-# argumentos: nome do remédio
-adiministrar_medicamento.informacoes_de_medicacao('remedio')
-adiministrar_medicamento.informacoes_de_medicacao('ergvefdg')
+# # argumentos: nome do remédio
+# adiministrar_medicamento.informacoes_de_medicacao('remedio')
+# adiministrar_medicamento.informacoes_de_medicacao('ergvefdg')
