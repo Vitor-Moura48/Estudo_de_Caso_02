@@ -66,7 +66,8 @@ try:
             case '5':
                 pass
             case '6':
-                pass
+                from controller.gestao_equipe_controller import run
+                run()
             case '7':
                 pass
             case '8':
