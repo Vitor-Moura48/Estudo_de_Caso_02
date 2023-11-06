@@ -32,7 +32,7 @@ def run():
             else:
                 print('Paciente não encontrado.')
         elif opcao == '3':
-            modulo_cadastro_pacientes.listar_pacientes_e_prontuarios(input("Digite o nome"))
+            modulo_cadastro_pacientes.listar_pacientes_e_prontuarios(input("Digite o nome: "))
         elif opcao == '4':
             print('Saindo do módulo de cadastro de pacientes...')
             break
