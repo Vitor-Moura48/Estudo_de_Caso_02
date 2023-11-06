@@ -64,12 +64,21 @@ class SistemaHospital:
                 break
 
     def listar_pacientes_e_prontuarios(self, nome):
-        arquivo = pandas.read_csv('database/pacientes.csv')
-        arquivo_prontuario = pandas.read_csv(f'database/prontuarios/{nome}.csv')
+        try:
+            arquivo = pandas.read_csv('database/pacientes.csv')
+        except:
+            arquivo = pandas.DataFrame()
 
-        print()
-        print(arquivo.to_csv(index=False))
-        print(arquivo_prontuario.to_csv(index=False))
+        try:
+            arquivo_prontuario = pandas.read_csv(f'database/prontuarios/{nome}.csv')
+        except:
+            arquivo_prontuario = pandas.DataFrame()
+
+        if nome in arquivo['Nome'].astype(str).to_list():
+            print(arquivo[arquivo['nome'] == nome])
+            print(arquivo_prontuario.to_csv(index=False))
+        else:
+            print("Nome não encontrado")
 
 if __name__ == "__main__":
     modulo_cadastro_pacientes = SistemaHospital()
@@ -85,7 +94,7 @@ if __name__ == "__main__":
         if opcao == '1':
             modulo_cadastro_pacientes.cadastrar_paciente()
         elif opcao == '2':
-            modulo_cadastro_pacientes.listar_pacientes_e_prontuarios()
+            modulo_cadastro_pacientes.listar_pacientes_e_prontuarios(input("Digite o nome"))
             nome_paciente = input('Digite o nome do paciente para cadastrar um prontuario: ')
             paciente_encontrado = next((p for p in modulo_cadastro_pacientes.lista_de_todos_os_pacientes if p['Nome'] == nome_paciente), None)
             if paciente_encontrado:
@@ -93,7 +102,7 @@ if __name__ == "__main__":
             else:
                 print('Paciente não encontrado.')
         elif opcao == '3':
-            modulo_cadastro_pacientes.listar_pacientes_e_prontuarios()
+            modulo_cadastro_pacientes.listar_pacientes_e_prontuarios(input("Digite o nome"))
         elif opcao == '4':
             print('Saindo do módulo de cadastro de pacientes...')
             break
