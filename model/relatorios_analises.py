@@ -23,15 +23,7 @@ class RelatorioAnalise:
 
         print(f'Média Hospital: {media_hospital}\nMédia UTI: {media_uti}')
 
-    def gerar_relatorio_csv(self):
-        pass
-    
-
-    def gerar_relatorio_txt(self, perfomance_uti, perfomance_hospital):
-        
-        with open('database/relatorio_txt/relatorio.txt','a') as arquivo_txt:
-            arquivo_txt.write(f'UTI: {perfomance_uti}/ HOSPITAL: {perfomance_hospital}')
-    
+  
     def gerar_relatorio_csv(self, perfomance_uti, perfomance_hospital):
         try:
             arquivo = pandas.read_csv('database/relatorio.csv')
@@ -56,4 +48,4 @@ class RelatorioAnalise:
 
 
 m = RelatorioAnalise()
-m.gerar_relatorio_txt('Muito','Corinthians')
+m.gerar_relatorio_txt('10','10')
