@@ -20,7 +20,7 @@ def run():
                               ('1 - Gerar_reatorio_txt', '1'),
                               ('2 - Gerar_relatorio_csv', '2'),
                               ('3 - Métricas de ocupação', '3'),
-                              ('4 - Relatório de uso de medicamentos', '4'),
+                              ('4 - Relatório de uso de equipamentos', '4'),
                               ('5 - Sair do módulo', '5')
                           ])
         ]
@@ -64,7 +64,7 @@ def run():
             
         elif opcao == '3':
         
-            modulo_leitos = imprimir_historico()  
+            modulo_leitos.imprimir_historico()  
             
         elif opcao == '4':
 

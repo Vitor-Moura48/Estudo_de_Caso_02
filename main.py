@@ -74,7 +74,8 @@ try:
             case '7':
                 from controller.agendamento_controle_de_visitas_controlelr import run
             case '8':
-                pass
+                from controller.relatorios_analises_controller import run
+                run()
             case '9':
                 print(f'{cor_mensagem}👋 Obrigado por utilizar o Sistema de Informação de Gerenciamento Hospitalar{Style.RESET_ALL}\n')
                 break
