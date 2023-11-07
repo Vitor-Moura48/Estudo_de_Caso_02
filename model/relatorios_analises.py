@@ -8,13 +8,20 @@ class RelatorioAnalise:
             arquivo_txt.write(f'UTI: {perfomance_uti}/ HOSPITAL: {perfomance_hospital}')
     
     def gerar_relatorio_csv(self, perfomance_uti, perfomance_hospital):
-        analise = pandas.DataFrame({'performance_util': perfomance_uti, 'performance_hospital': perfomance_hospital})
+        try:
+            arquivo = pandas.read_csv('database/relatorio.csv')
+        except:
+            arquivo = pandas.DataFrame()
+        
+        analise = pandas.DataFrame({'performance_util': [perfomance_uti], 'performance_hospital': [perfomance_hospital]})
 
-        analise.to_csv('database/relatorio_txt/relatorio.csv', mode='a')
+        if arquivo.empty:
+            analise.to_csv('database/relatorio.csv', mode='a', index=False)
+        else:
+            analise.to_csv('database/relatorio.csv', mode='a', index=False, header=False)
 
-        arquivo = pandas.read_csv('database/relatorio_txt/relatorio.csv')
-        print(arquivo['performance_util'].sum() / len(arquivo))
-        print(arquivo['performance_hospital'].sum() / len(arquivo))
+        print(f'Média_útil --> {(arquivo["performance_util"].astype(int).sum() / len(arquivo)).round(2)}') 
+        print(f'Média_hospital --> {(arquivo["performance_hospital"].astype(int).sum() / len(arquivo)).round(2)}')
 
     def metricas_de_ocupacao(self):
         pass
@@ -24,4 +31,6 @@ class RelatorioAnalise:
 
 
 m = RelatorioAnalise()
-m.gerar_relatorio_txt('Muito','Corinthians')
+m.gerar_relatorio_txt('8','9')
+m.gerar_relatorio_csv('7','6')
+m.gerar_relatorio_csv('8','5')
