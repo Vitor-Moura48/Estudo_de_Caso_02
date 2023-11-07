@@ -3,5 +3,5 @@
 - Rafael Santana
 - Vitor Gabriel
 - Otton
-- Tiago
+- Tiago Manoel
 - Carlos
