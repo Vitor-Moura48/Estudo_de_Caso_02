@@ -86,7 +86,7 @@ class SistemaGestaoLeitos:
             escritor_csv.writerows(self.historico_ocupacao)
 
     def gerar_relatorio(self):
-        nome_arquivo = f'database/relatorio_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.csv'
+        nome_arquivo = f'database/relatorio/relatorio_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.csv'
         with open(nome_arquivo, 'w', newline='') as arquivo_csv:
             campos = ["Data e Hora", "UTI", "Amarela", "Intermediario"]
             escritor_csv = csv.DictWriter(arquivo_csv, fieldnames=campos)
