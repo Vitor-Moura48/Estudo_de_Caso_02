@@ -64,7 +64,7 @@ def run():
             
         elif opcao == '3':
         
-            modulo_leitos = imprimir_historio()  
+            modulo_leitos = imprimir_historico()  
             
         elif opcao == '4':
 

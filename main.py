@@ -72,7 +72,7 @@ try:
                 from controller.gestao_equipe_controller import run
                 run()
             case '7':
-                pass
+                from controller.agendamento_controle_de_visitas_controlelr import run
             case '8':
                 pass
             case '9':
