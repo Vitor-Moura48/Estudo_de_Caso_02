@@ -96,11 +96,14 @@ class SistemaGestaoLeitos:
     #imprimi o historico para mostrar na tela/terminal
     def imprimir_historico(self):
         print("Histórico de Ocupação:")
-        for registro in self.historico_ocupacao:
-            print(f"Data e Hora: {registro['Data e Hora']}")
-            print(f"Leitos UTI: {registro['UTI']}")
-            print(f"Leitos Amarela: {registro['Amarela']}")
-            print(f"Leitos Intermediário: {registro['Intermediario']}\n")
+        if self.historico_ocupacao == []:
+            for registro in self.historico_ocupacao:
+                print(f"Data e Hora: {registro['Data e Hora']}")
+                print(f"Leitos UTI: {registro['UTI']}")
+                print(f"Leitos Amarela: {registro['Amarela']}")
+                print(f"Leitos Intermediário: {registro['Intermediario']}\n")
+        else:
+            print('Histórico de ocupação não disponível no momento :(')
 
 if __name__ == "__main__":
     sistema = SistemaGestaoLeitos()
