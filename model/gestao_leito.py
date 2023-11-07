@@ -14,6 +14,7 @@ class SistemaGestaoLeitos:
         }
         self.historico_ocupacao = []
 
+    #monitora os leitos e chama as funções caso necessário
     def monitorar_leitos(self):
         while True:
             print('''
@@ -46,6 +47,7 @@ class SistemaGestaoLeitos:
                 print("ALERTA! Capacidade máxima atingida ou próxima de ser atingida.")
                 self.liberar_alas_se_necessario()
 
+            #gerar relatórios a cada 10 leitos ocupados
             if len(self.historico_ocupacao) % 10 == 0:
                 self.gerar_relatorio()
 
@@ -91,8 +93,15 @@ class SistemaGestaoLeitos:
             escritor_csv.writeheader()
             escritor_csv.writerows(self.historico_ocupacao)
 
+    #imprimi o historico para mostrar na tela/terminal
+    def imprimir_historico(self):
+        print("Histórico de Ocupação:")
+        for registro in self.historico_ocupacao:
+            print(f"Data e Hora: {registro['Data e Hora']}")
+            print(f"Leitos UTI: {registro['UTI']}")
+            print(f"Leitos Amarela: {registro['Amarela']}")
+            print(f"Leitos Intermediário: {registro['Intermediario']}\n")
+
 if __name__ == "__main__":
     sistema = SistemaGestaoLeitos()
-    sistema.monitorar_leitos()
-    sistema.salvar_historico_csv()
     sistema.gerar_relatorio()
