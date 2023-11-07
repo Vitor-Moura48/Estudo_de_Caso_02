@@ -17,11 +17,12 @@ def run():
             inquirer.List('opcao',
                           message='Selecione o que deseja fazer',
                           choices=[
-                              ('1 - Gerar_reatorio_txt', '1'),
+                              ('1 - Gerar_relatorio_txt', '1'),
                               ('2 - Gerar_relatorio_csv', '2'),
                               ('3 - Métricas de ocupação', '3'),
                               ('4 - Relatório de uso de equipamentos', '4'),
-                              ('5 - Sair do módulo', '5')
+                              ('5 - Dados sobre atendimento dos pacientes', '5'),
+                              ('6 - Sair do módulo', '6')
                           ])
         ]
 
